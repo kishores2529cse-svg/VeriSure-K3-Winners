@@ -721,27 +721,27 @@ export const AICameraWidget: React.FC<AICameraWidgetProps> = ({
   }
 
   return (
-    <div className="glass-panel rounded-2xl p-3 border border-slate-800 shadow-2xl relative overflow-hidden transition-all w-[18vw] min-w-[260px] max-w-[320px]">
+    <div className="glass-panel rounded-2xl p-3 border border-[#7CFF4D]/30 bg-neutral-950/90 shadow-2xl relative overflow-hidden transition-all w-[18vw] min-w-[260px] max-w-[320px]">
       
       {/* Top Header & Status Badge */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5 select-none">
           <span className="relative flex h-2.5 w-2.5">
-            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${unauthObject.detected || focusShift ? 'bg-rose-500' : 'bg-emerald-400'}`}></span>
-            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${unauthObject.detected || focusShift ? 'bg-rose-500' : 'bg-emerald-500'}`}></span>
+            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${unauthObject.detected || focusShift ? 'bg-rose-500' : 'bg-[#7CFF4D]'}`}></span>
+            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${unauthObject.detected || focusShift ? 'bg-rose-500' : 'bg-[#7CFF4D]'}`}></span>
           </span>
-          <span className="text-xs font-semibold text-slate-200 tracking-tight">
+          <span className="text-xs font-semibold text-slate-100 tracking-tight">
             AI Vision Proctor
           </span>
         </div>
-        <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-mono border border-emerald-500/20">
-          <Wifi className="w-3 h-3" />
+        <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-gradient-to-r from-[#7CFF4D]/10 to-[#FFD84D]/10 text-[#7CFF4D] text-[10px] font-mono border border-[#7CFF4D]/30">
+          <Wifi className="w-3 h-3 text-[#FFD84D]" />
           <span>{wsConnected ? 'YOLOv8-N' : 'Neural Core'}</span>
         </div>
       </div>
 
       {/* Video Viewport / Canvas AI Overlay */}
-      <div className="relative w-full h-36 rounded-xl bg-slate-950 overflow-hidden border border-slate-800 flex items-center justify-center group">
+      <div className="relative w-full h-36 rounded-xl bg-neutral-950 overflow-hidden border border-neutral-800 flex items-center justify-center group">
         {cameraActive ? (
           <video
             ref={videoRef}
@@ -752,7 +752,7 @@ export const AICameraWidget: React.FC<AICameraWidgetProps> = ({
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 text-xs font-sans">
-            <Camera className="w-8 h-8 mb-1.5 opacity-40 animate-pulse" />
+            <Camera className="w-8 h-8 mb-1.5 opacity-40 animate-pulse text-[#7CFF4D]" />
             <span>Camera Inactive</span>
           </div>
         )}
@@ -765,9 +765,9 @@ export const AICameraWidget: React.FC<AICameraWidgetProps> = ({
           className="absolute inset-0 w-full h-full pointer-events-none z-10"
         />
 
-        {/* Live HUD Model Badge */}
-        <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur text-[9px] font-mono text-cyan-300 flex items-center gap-1 border border-cyan-500/30">
-          <Cpu className="w-3 h-3 animate-spin text-cyan-400" />
+        {/* Live HUD Model Badge - 50-50 Green & Yellow */}
+        <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur text-[9px] font-mono text-[#FFD84D] flex items-center gap-1 border border-[#FFD84D]/35">
+          <Cpu className="w-3 h-3 animate-spin text-[#7CFF4D]" />
           <span>{modelLoading ? 'INITIALIZING AI...' : modelType}</span>
         </div>
 
@@ -776,12 +776,12 @@ export const AICameraWidget: React.FC<AICameraWidgetProps> = ({
           <button
             type="button"
             onClick={() => setShowVideo(false)}
-            className="px-2 py-0.5 rounded bg-black/80 hover:bg-black/90 backdrop-blur text-emerald-400 border border-emerald-500/30 flex items-center gap-1 cursor-pointer transition-colors"
+            className="px-2 py-0.5 rounded bg-black/80 hover:bg-neutral-900 backdrop-blur text-[#7CFF4D] border border-[#7CFF4D]/30 hover:border-[#FFD84D]/40 flex items-center gap-1 cursor-pointer transition-colors"
             title="Click to hide video feed"
           >
-            <Eye className="w-2.5 h-2.5" /> Eye-Lock
+            <Eye className="w-2.5 h-2.5 text-[#7CFF4D]" /> Eye-Lock
           </button>
-          <span className={`px-1.5 py-0.5 rounded bg-black/80 backdrop-blur border ${focusShift ? 'border-amber-500 text-amber-300 font-bold' : 'border-slate-700 text-slate-300'}`}>
+          <span className={`px-1.5 py-0.5 rounded bg-black/80 backdrop-blur border ${focusShift ? 'border-amber-500 text-amber-300 font-bold' : 'border-[#7CFF4D]/40 text-[#7CFF4D]'}`}>
             {focusShift ? '⚠️ FOCUS SHIFTED' : '✓ FOCUSED'}
           </span>
         </div>

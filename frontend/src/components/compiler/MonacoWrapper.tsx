@@ -40,22 +40,22 @@ export const MonacoWrapper: React.FC = React.memo(() => {
   };
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-[24px] border border-white/10 bg-[#050816] shadow-[0_24px_100px_rgba(2,6,23,0.55)]">
-      <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-slate-900/80 px-4 py-2.5 font-sans">
+    <div className="flex h-full flex-col overflow-hidden rounded-[24px] border border-[#7CFF4D]/25 bg-[#050a0e] shadow-[0_24px_100px_rgba(0,0,0,0.75)] backdrop-blur-xl">
+      <div className="flex items-center justify-between gap-3 border-b border-[#7CFF4D]/20 bg-neutral-950/90 px-4 py-2.5 font-sans">
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 rounded-xl border border-cyan-400/20 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300">
-            <Sparkles className="h-3.5 w-3.5" />
-            Studio
+          <div className="flex items-center gap-2 rounded-xl border border-[#7CFF4D]/35 bg-gradient-to-r from-[#7CFF4D]/15 via-[#A3FF1A]/10 to-[#FFD84D]/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.2em]">
+            <Sparkles className="h-3.5 w-3.5 text-[#7CFF4D]" />
+            <span className="bg-gradient-to-r from-[#7CFF4D] via-[#A3FF1A] to-[#FFD84D] bg-clip-text text-transparent">Studio</span>
           </div>
-          <div className="flex items-center gap-1 rounded-xl border border-white/10 bg-slate-950/80 p-1 text-xs">
+          <div className="flex items-center gap-1 rounded-xl border border-neutral-800 bg-neutral-950/90 p-1 text-xs">
             {languageOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => handleLanguageChange(option.value)}
-                className={`rounded-lg px-2.5 py-1 font-mono transition-colors ${
+                className={`rounded-lg px-2.5 py-1 font-mono transition-all ${
                   selectedLanguage === option.value
-                    ? 'border border-cyan-400/30 bg-cyan-500/20 text-cyan-200'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'border border-[#7CFF4D]/50 bg-gradient-to-r from-[#7CFF4D]/20 to-[#FFD84D]/20 text-[#7CFF4D] font-bold shadow-[0_0_12px_rgba(124,255,77,0.15)]'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-neutral-900/50'
                 }`}
               >
                 {option.short}
@@ -65,20 +65,20 @@ export const MonacoWrapper: React.FC = React.memo(() => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1 rounded-lg border border-emerald-400/20 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-mono text-emerald-300">
-            <Check className="h-3.5 w-3.5" />
+          <span className="flex items-center gap-1 rounded-lg border border-[#7CFF4D]/30 bg-[#7CFF4D]/10 px-2.5 py-1 text-[11px] font-mono text-[#7CFF4D]">
+            <Check className="h-3.5 w-3.5 text-[#7CFF4D]" />
             {autoSaveStatus}
           </span>
           <button
             onClick={handleCopy}
-            className="rounded-lg border border-white/10 bg-white/5 p-2 text-slate-400 transition hover:text-slate-200"
+            className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-2 text-slate-400 transition hover:border-[#FFD84D]/40 hover:text-[#FFD84D]"
             title="Copy code"
           >
             <Copy className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={handleReset}
-            className="rounded-lg border border-white/10 bg-white/5 p-2 text-slate-400 transition hover:text-slate-200"
+            className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-2 text-slate-400 transition hover:border-[#FFD84D]/40 hover:text-[#FFD84D]"
             title="Reset snippet"
           >
             <RotateCcw className="h-3.5 w-3.5" />

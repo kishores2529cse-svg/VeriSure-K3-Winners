@@ -51,7 +51,7 @@ export default function HomeDashboard() {
           return (
             <Link key={tool.href} to={tool.href} className={`group flex min-h-[300px] flex-col rounded-2xl border p-6 transition duration-200 hover:-translate-y-1 hover:border-slate-500 hover:shadow-2xl hover:shadow-black/20 ${tool.accent}`}>
               <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${tool.iconBackground}`}><Icon className="h-7 w-7 text-red-400" /></div>
-              <div className="mt-8 flex-1"><h2 className="text-2xl font-semibold text-black">{tool.title}</h2><p className="mt-3 text-sm leading-6 text-white">{tool.description}</p></div>
+              <div className="mt-8 flex-1"><h2 className="text-2xl font-semibold text-red-400">{tool.title}</h2><p className="mt-3 text-sm leading-6 text-white">{tool.description}</p></div>
               <div className="mt-8 flex items-center justify-between border-t border-white/20 pt-4 text-sm font-semibold text-white"><span>{tool.label}</span><ArrowUpRight className="h-5 w-5 text-white transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></div>
             </Link>
           );
