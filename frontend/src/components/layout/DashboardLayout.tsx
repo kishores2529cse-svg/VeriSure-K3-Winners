@@ -6,7 +6,6 @@ const navigation = [
   { name: "Landing", href: "/", icon: LayoutDashboard },
   { name: "Console", href: "/dashboard", icon: LayoutDashboard },
   { name: "Proctor Vision", href: "/proctor", icon: Camera },
-  { name: "UPI Guard", href: "/upi", icon: ShieldAlert },
   { name: "Scam Scanner", href: "/scam-scanner", icon: Bug },
   { name: "Scam Lists", href: "/scam-lists", icon: BookOpen },
 ];
