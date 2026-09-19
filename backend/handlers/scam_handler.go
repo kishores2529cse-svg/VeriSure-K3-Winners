@@ -1,4 +1,4 @@
-﻿package handlers
+package handlers
 
 import (
 	"net/http"
@@ -21,6 +21,7 @@ const (
 	CatPaymentMethod     SignalCategory = "Untraceable / Direct UPI / Crypto / Escrow Bypass"
 	CatCredentialTheft   SignalCategory = "Sensitive Credential Harvesting"
 	CatLegitimacySignal  SignalCategory = "Legitimacy & Professional Verification"
+	CatIncoherentText    SignalCategory = "Incoherent / Generated Spam"
 )
 
 // SemanticPattern represents a generalized pattern rule with regex and category
@@ -325,6 +326,42 @@ func HandleScamScanner(c *gin.Context) {
 		}
 	}
 
+	// 2.5 Manual check for incoherent repeated words
+	words := strings.Fields(content)
+	if len(words) > 5 {
+		consecutiveCount := 1
+		for i := 1; i < len(words); i++ {
+			prev := strings.ToLower(strings.Trim(words[i-1], ".,!?\"'()[]{}"))
+			curr := strings.ToLower(strings.Trim(words[i], ".,!?\"'()[]{}"))
+			
+			if prev == curr && len(curr) >= 2 {
+				consecutiveCount++
+			} else {
+				consecutiveCount = 1
+			}
+
+			if consecutiveCount >= 3 {
+				// We found a word repeated 3 or more times consecutively
+				categoryScores[CatIncoherentText] += 50
+				categoryDescriptions[CatIncoherentText] = append(categoryDescriptions[CatIncoherentText], "Contains excessive consecutive word repetition, indicating keyboard mashing or incoherent spam.")
+				
+				matchedStr := curr + " " + curr + " " + curr
+				findings = append(findings, ScamFinding{
+					MatchedTerm: matchedStr,
+					Weight:      50,
+					Rationale:   "Consecutive repeated words indicate automated spam or incoherent content.",
+					Category:    string(CatIncoherentText),
+				})
+				
+				if !flaggedTermsMap[curr] {
+					flaggedTermsMap[curr] = true
+					flaggedTerms = append(flaggedTerms, curr)
+				}
+				break // Only need to detect it once
+			}
+		}
+	}
+
 	// 2. Structured, Currency-Aware Salary Parsing & Anomaly Analysis
 	parsedSalary := ParseSalary(content)
 	if parsedSalary != nil {
@@ -368,7 +405,10 @@ func HandleScamScanner(c *gin.Context) {
 			continue
 		}
 		cappedCatScore := score
-		if cappedCatScore > 65 {
+		// Incoherent text can score higher up to 100
+		if cat == CatIncoherentText && cappedCatScore > 85 {
+			cappedCatScore = 85
+		} else if cat != CatIncoherentText && cappedCatScore > 65 {
 			cappedCatScore = 65
 		}
 		baseRiskScore += cappedCatScore
@@ -400,11 +440,14 @@ func HandleScamScanner(c *gin.Context) {
 	if hasCredentialTheft {
 		synergyBonus += 30 // Direct credential harvesting
 	}
+	if categoryScores[CatIncoherentText] > 0 {
+		synergyBonus += 50 // Severe penalty for completely incoherent/gibberish text
+	}
 
 	rawScore := baseRiskScore + synergyBonus + legitimacyDampening
 
 	// Single isolated weak signals without other fraud indicators should stay low risk
-	if !hasAdvancePayment && !hasPaymentMethod && !hasCredentialTheft && !hasSalaryAnomaly && !hasRecruitmentShortcut && !hasSuspiciousChannel {
+	if !hasAdvancePayment && !hasPaymentMethod && !hasCredentialTheft && !hasSalaryAnomaly && !hasRecruitmentShortcut && !hasSuspiciousChannel && categoryScores[CatIncoherentText] == 0 {
 		if rawScore > 20 && len(findings) <= 1 {
 			rawScore = 15 // Capped to LOW risk if only minor urgency was found
 		}
