@@ -2,10 +2,11 @@ import { Outlet, Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, ShieldAlert, Bug, Camera } from "lucide-react";
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Landing", href: "/", icon: LayoutDashboard },
+  { name: "Console", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Proctor Vision", href: "/proctor", icon: Camera },
   { name: "UPI Guard", href: "/upi", icon: ShieldAlert },
   { name: "Scam Scanner", href: "/scam-scanner", icon: Bug },
-  { name: "Proctor Vision", href: "/proctor", icon: Camera },
 ];
 
 export default function DashboardLayout() {
