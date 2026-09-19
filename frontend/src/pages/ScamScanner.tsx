@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useRef, useCallback } from "react";
+import React, { useState, useMemo, useRef, useCallback } from "react";
 import Tesseract from "tesseract.js";
 import {
   ShieldAlert,
@@ -73,7 +73,7 @@ interface AnalysisResult {
 
 const SAMPLE_TEXT_PRESETS = [
   {
-    title: "💵 US High-Salary Task Scam (USD)",
+    title: "?? US High-Salary Task Scam (USD)",
     tag: "USD Task Scam",
     content: `Urgent Hiring! Work from Home Data Entry Operator.
 Earn $100,000/year with no experience required.
@@ -82,25 +82,25 @@ Candidates must pay a refundable onboarding security deposit of $350 before kit 
 Contact HR on Telegram: @us_recruitment_hub`,
   },
   {
-    title: "🚨 Fake Job with Upfront Fee",
+    title: "?? Fake Job with Upfront Fee",
     tag: "Advance Fee Job",
     content: `Urgent Requirement! International Data Corp is hiring candidates immediately.
 Position: Operations Lead.
-No experience required for manager role! Work from home ₹50,000 per month guaranteed.
-To proceed with onboarding and background check, candidates must deposit a refundable registration fee of ₹2,500.
+No experience required for manager role! Work from home ?50,000 per month guaranteed.
+To proceed with onboarding and background check, candidates must deposit a refundable registration fee of ?2,500.
 Please pay upfront through our portal. Contact HR on telegram: @hr_recruit_direct to get your employee kit.`,
   },
   {
-    title: "⚠️ Marketplace Fraud Listing",
+    title: "?? Marketplace Fraud Listing",
     tag: "Marketplace Scam",
-    content: `Selling brand new iPhone 15 Pro Max 256GB sealed in box for just ₹35,000 due to urgent relocation.
+    content: `Selling brand new iPhone 15 Pro Max 256GB sealed in box for just ?35,000 due to urgent relocation.
 Free shipping across India.
 Due to bank server maintenance, do not use the app checkout.
 Send money to this alternate number (+91 9876543210) via GPay to confirm booking immediately.
 Once sent, share screenshot on whatsapp for tracking ID dispatch.`,
   },
   {
-    title: "✅ Legitimate Corporate Job",
+    title: "? Legitimate Corporate Job",
     tag: "Legitimate Job",
     content: `Senior Frontend Engineer - VeriSure Core Team
 We are seeking an experienced React and TypeScript developer with 3+ years of production experience.
@@ -325,12 +325,12 @@ export default function ScamScanner() {
 
     ctx.fillStyle = "#4ade80";
     ctx.font = "bold 22px sans-serif";
-    ctx.fillText("Earn ₹50,000 per month guaranteed.", 40, 195);
+    ctx.fillText("Earn ?50,000 per month guaranteed.", 40, 195);
 
     ctx.fillStyle = "#e2e8f0";
     ctx.font = "18px sans-serif";
     ctx.fillText("To complete registration, candidates must pay", 40, 245);
-    ctx.fillText("a refundable registration fee of ₹2,500.", 40, 275);
+    ctx.fillText("a refundable registration fee of ?2,500.", 40, 275);
     ctx.fillText("Please pay upfront through portal.", 40, 305);
 
     ctx.fillStyle = "#fbbf24";
@@ -373,16 +373,16 @@ export default function ScamScanner() {
     const breakdowns = result.signal_breakdown || [];
     const sourceLabel =
       result.source === "IMAGE_OCR"
-        ? `🖼️ Image → OCR → Text Analysis (OCR Confidence: ${result.ocr_confidence ?? "N/A"}%)`
-        : "📝 Direct Text Input";
+        ? `??? Image ? OCR ? Text Analysis (OCR Confidence: ${result.ocr_confidence ?? "N/A"}%)`
+        : "?? Direct Text Input";
 
-    const summary = `🛡️ VeriSure Multi-Signal Scam Audit Report
+    const summary = `??? VeriSure Multi-Signal Scam Audit Report
 Source: ${sourceLabel}
 Risk Score: ${result.score}/100 [${result.risk_level} RISK]
 Flagged Terms: ${flagged.join(", ") || "None"}
 
 Risk Signal Breakdown:
-${breakdowns.map((b) => `• ${b.category}: ${b.score_impact > 0 ? `+${b.score_impact}` : b.score_impact} pts - ${b.description}`).join("\n")}
+${breakdowns.map((b) => `� ${b.category}: ${b.score_impact > 0 ? `+${b.score_impact}` : b.score_impact} pts - ${b.description}`).join("\n")}
 
 Detailed Findings & Rationales:
 ${
@@ -408,7 +408,7 @@ Timestamp: ${new Date(result.analyzed_at).toLocaleString()}`;
 
     if (!result || flagged.length === 0) {
       return (
-        <div className="font-mono text-sm leading-relaxed text-slate-300 whitespace-pre-wrap">
+        <div className="font-mono text-sm leading-relaxed text-neutral-300 whitespace-pre-wrap">
           {currentText}
         </div>
       );
@@ -421,7 +421,7 @@ Timestamp: ${new Date(result.analyzed_at).toLocaleString()}`;
 
     if (escapedTerms.length === 0) {
       return (
-        <div className="font-mono text-sm leading-relaxed text-slate-300 whitespace-pre-wrap">
+        <div className="font-mono text-sm leading-relaxed text-neutral-300 whitespace-pre-wrap">
           {currentText}
         </div>
       );
@@ -431,7 +431,7 @@ Timestamp: ${new Date(result.analyzed_at).toLocaleString()}`;
     const parts = currentText.split(regex);
 
     return (
-      <div className="font-mono text-sm leading-relaxed text-slate-300 whitespace-pre-wrap select-text">
+      <div className="font-mono text-sm leading-relaxed text-neutral-300 whitespace-pre-wrap select-text">
         {parts.map((part, index) => {
           const isFlagged = flagged.some(
             (term) => term.toLowerCase() === part.toLowerCase()
@@ -458,102 +458,71 @@ Timestamp: ${new Date(result.analyzed_at).toLocaleString()}`;
     );
   };
 
+
   const getScoreTheme = (score: number) => {
     if (score >= 75) {
-      return {
-        text: "text-red-400",
-        bg: "bg-red-500/10",
-        border: "border-red-500/30",
-        badge: "bg-red-500/20 text-red-300 border-red-500/40",
-        bar: "bg-gradient-to-r from-orange-500 to-red-500",
-      };
+      return { text: "text-red-500", bg: "bg-red-500/10", badge: "bg-[#2A0808] text-red-400 border-red-900" };
     }
     if (score >= 50) {
-      return {
-        text: "text-amber-400",
-        bg: "bg-amber-500/10",
-        border: "border-amber-500/30",
-        badge: "bg-amber-500/20 text-amber-300 border-amber-500/40",
-        bar: "bg-gradient-to-r from-yellow-500 to-amber-500",
-      };
+      return { text: "text-orange-400", bg: "bg-orange-500/10", badge: "bg-[#2A1808] text-orange-400 border-orange-900" };
     }
     if (score >= 25) {
-      return {
-        text: "text-yellow-400",
-        bg: "bg-yellow-500/10",
-        border: "border-yellow-500/30",
-        badge: "bg-yellow-500/20 text-yellow-300 border-yellow-500/40",
-        bar: "bg-gradient-to-r from-teal-500 to-yellow-500",
-      };
+      return { text: "text-yellow-400", bg: "bg-yellow-500/10", badge: "bg-[#2A2A08] text-yellow-400 border-yellow-900" };
     }
-    return {
-      text: "text-emerald-400",
-      bg: "bg-emerald-500/10",
-      border: "border-emerald-500/30",
-      badge: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
-      bar: "bg-gradient-to-r from-teal-500 to-emerald-500",
-    };
+    return { text: "text-[#7CFF4D]", bg: "bg-[#7CFF4D]/10", badge: "bg-[#0A1A0A] text-[#7CFF4D] border-[#7CFF4D]/30" };
   };
 
   const findingsCount = result?.findings?.length || 0;
   const isBusy = loading || ocrLoading;
 
   return (
-    <div className="space-y-6 flex flex-col">
-      {/* Top Banner / Mode Switcher */}
-      <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-4 sm:p-6 backdrop-blur-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="flex flex-col h-full bg-[#090909] text-neutral-200">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-4 border-b border-neutral-800">
         <div>
-          <div className="flex items-center space-x-2.5">
-            <div className="p-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400">
-              <ShieldAlert className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-slate-100 flex items-center space-x-2">
-                <span>Scam Scanner & Listing Audit</span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/30">
-                  Multi-Signal Heuristic Engine
-                </span>
-              </h2>
-              <p className="text-xs text-slate-400">
-                Generalizing fraud analysis using semantic category extraction, combinatorial scoring, and legitimacy dampeners
-              </p>
-            </div>
-          </div>
+          <h1 className="text-xl font-bold text-white flex items-center space-x-2">
+            <ShieldAlert className="w-5 h-5 text-[#7CFF4D]" />
+            <span>Scam Scanner</span>
+          </h1>
+          <p className="text-sm text-neutral-400 mt-1">
+            Detect suspicious job postings and fraudulent recruitment content using AI-powered analysis.
+          </p>
+        </div>
+        <div className="flex items-center space-x-2 text-xs font-mono px-3 py-1.5 rounded-full bg-neutral-900 border border-neutral-800">
+          <div className="w-2 h-2 rounded-full bg-[#7CFF4D] shadow-[0_0_8px_rgba(124,255,77,0.4)] animate-pulse" />
+          <span className="text-[#7CFF4D]">SYSTEM ONLINE</span>
+        </div>
+      </div>
+
+      {/* Top Controls */}
+      <div className="flex flex-col md:flex-row items-center justify-between py-4 gap-4 border-b border-neutral-800">
+        <div className="flex bg-[#0D110D] p-1 rounded-lg border border-neutral-800">
+          <button
+            onClick={() => { setInputMode("text"); setError(null); }}
+            className={`text-xs px-4 py-2 rounded-md font-medium transition flex items-center space-x-2 cursor-pointer ${
+              inputMode === "text"
+                ? "bg-neutral-800 text-white border border-[#7CFF4D]/30 shadow-[0_0_10px_rgba(124,255,77,0.1)]"
+                : "text-neutral-400 hover:text-white"
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            <span>Paste Text</span>
+          </button>
+          <button
+            onClick={() => { setInputMode("image"); setError(null); }}
+            className={`text-xs px-4 py-2 rounded-md font-medium transition flex items-center space-x-2 cursor-pointer ${
+              inputMode === "image"
+                ? "bg-neutral-800 text-white border border-[#7CFF4D]/30 shadow-[0_0_10px_rgba(124,255,77,0.1)]"
+                : "text-neutral-400 hover:text-white"
+            }`}
+          >
+            <ImageIcon className="w-4 h-4" />
+            <span>Upload Image (OCR)</span>
+          </button>
         </div>
 
-        {/* Input Mode Switcher & Presets */}
+        {/* Presets */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
-            <button
-              onClick={() => {
-                setInputMode("text");
-                setError(null);
-              }}
-              className={`text-xs px-3 py-1.5 rounded-lg font-medium transition flex items-center space-x-1.5 cursor-pointer ${
-                inputMode === "text"
-                  ? "bg-slate-800 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Paste Text</span>
-            </button>
-            <button
-              onClick={() => {
-                setInputMode("image");
-                setError(null);
-              }}
-              className={`text-xs px-3 py-1.5 rounded-lg font-medium transition flex items-center space-x-1.5 cursor-pointer ${
-                inputMode === "image"
-                  ? "bg-slate-800 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              <ImageIcon className="w-3.5 h-3.5 text-amber-400" />
-              <span>Upload Image (OCR)</span>
-            </button>
-          </div>
-
           {inputMode === "text" ? (
             SAMPLE_TEXT_PRESETS.map((preset, idx) => (
               <button
@@ -563,7 +532,7 @@ Timestamp: ${new Date(result.analyzed_at).toLocaleString()}`;
                   setResult(null);
                   setError(null);
                 }}
-                className="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/60 transition active:scale-95 cursor-pointer"
+                className="text-xs px-3 py-1.5 rounded bg-[#0D110D] hover:bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-800 transition active:scale-95 cursor-pointer"
               >
                 {preset.tag}
               </button>
@@ -571,612 +540,271 @@ Timestamp: ${new Date(result.analyzed_at).toLocaleString()}`;
           ) : (
             <button
               onClick={handleLoadDemoScamScreenshot}
-              className="text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-500/20 to-amber-500/20 hover:from-red-500/30 hover:to-amber-500/30 text-amber-300 border border-amber-500/40 transition active:scale-95 flex items-center space-x-1.5 cursor-pointer shadow-sm"
+              className="text-xs px-3 py-1.5 rounded bg-[#0D110D] hover:bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-800 transition active:scale-95 flex items-center space-x-1.5 cursor-pointer"
             >
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-              <span>Demo Scam Screenshot</span>
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>Demo Screenshot</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Analysis Pipeline Flow Visualizer */}
-      {result && (
-        <div className="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3 px-4 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-          <div className="flex items-center space-x-2">
-            <span className="text-slate-400">SOURCE:</span>
-            {result.source === "IMAGE_OCR" ? (
-              <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/30 flex items-center space-x-1">
-                <ImageIcon className="w-3 h-3 mr-1" />
-                <span>Image → OCR → Multi-Signal Engine</span>
-              </span>
-            ) : (
-              <span className="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/30 flex items-center space-x-1">
-                <FileText className="w-3 h-3 mr-1" />
-                <span>Direct Text Analysis</span>
-              </span>
-            )}
+      {/* Pipeline Indicator */}
+      <div className="py-4 flex items-center space-x-2 text-[10px] font-mono tracking-widest text-neutral-500 overflow-x-auto">
+        <span className={inputMode ? "text-[#7CFF4D]" : ""}>INPUT</span>
+        <ArrowRight className="w-3 h-3" />
+        <span className={ocrExtractedText ? "text-[#7CFF4D]" : ""}>OCR / TEXT EXTRACTION</span>
+        <ArrowRight className="w-3 h-3" />
+        <span className={loading ? "text-[#7CFF4D] animate-pulse" : (result ? "text-[#7CFF4D]" : "")}>FEATURE ANALYSIS</span>
+        <ArrowRight className="w-3 h-3" />
+        <span className={result ? "text-[#7CFF4D]" : ""}>SCAM DETECTION</span>
+        <ArrowRight className="w-3 h-3" />
+        <span className={result ? "text-[#7CFF4D]" : ""}>RISK ASSESSMENT</span>
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8 items-stretch">
+        
+        {/* LEFT: JOB POSTING INPUT */}
+        <div className="flex flex-col bg-[#0B0F0B] border border-neutral-800/80 rounded-xl overflow-hidden shadow-lg">
+          <div className="px-4 py-3 bg-[#101510] border-b border-neutral-800/80 flex items-center space-x-2">
+            <Layers className="w-4 h-4 text-neutral-400" />
+            <h3 className="text-xs font-bold tracking-wider text-neutral-300 uppercase">Job Posting Input</h3>
           </div>
-
-          <div className="flex items-center space-x-2 text-[11px] text-slate-400">
-            <span className="text-slate-300 font-semibold">Engine:</span>
-            <span>Feature Extraction</span>
-            <ArrowRight className="w-3 h-3 text-slate-600" />
-            <span className="text-amber-300">Semantic Signals</span>
-            <ArrowRight className="w-3 h-3 text-slate-600" />
-            <span className="text-emerald-400">Combinatorial Aggregator</span>
-            <ArrowRight className="w-3 h-3 text-slate-600" />
-            <span className="text-red-400 font-bold">Threat: {result.score}/100</span>
-          </div>
-        </div>
-      )}
-
-      {/* Split-Screen Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* LEFT PANEL: Input (Text or Image Dropzone) */}
-        <div className="lg:col-span-6 flex flex-col space-y-4">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/90 shadow-xl overflow-hidden flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between px-4 py-2.5 bg-slate-950 border-b border-slate-800/80">
-              <div className="flex items-center space-x-2">
-                <div className="flex space-x-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                </div>
-                <div className="h-4 w-px bg-slate-800 mx-1" />
-                <div className="flex items-center text-xs font-mono text-slate-400">
-                  <Terminal className="w-3.5 h-3.5 mr-1.5 text-slate-500" />
-                  <span>
-                    {inputMode === "text"
-                      ? "job_or_listing_input.txt"
-                      : "ocr_extracted_document.txt"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-1">
-                {inputMode === "text" ? (
-                  <>
-                    <button
-                      onClick={handlePasteClipboard}
-                      title="Paste from clipboard"
-                      className="px-2 py-1 rounded text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-800 flex items-center space-x-1 transition cursor-pointer"
-                    >
-                      <ClipboardPaste className="w-3.5 h-3.5" />
-                      <span className="hidden sm:inline">Paste</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setInputText("");
-                        setResult(null);
-                        setError(null);
-                      }}
-                      title="Clear input"
-                      className="p-1 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition cursor-pointer"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                    </button>
-                  </>
-                ) : (
-                  selectedImage && (
-                    <button
-                      onClick={handleRemoveImage}
-                      title="Remove image"
-                      className="px-2 py-1 rounded text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 flex items-center space-x-1 transition cursor-pointer"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                      <span>Change Image</span>
-                    </button>
-                  )
-                )}
-              </div>
-            </div>
-
-            {/* Input Content Area */}
+          <div className="flex-1 p-4 flex flex-col">
             {inputMode === "text" ? (
-              <div className="relative flex min-h-[380px] bg-slate-950/60">
-                <div className="w-10 py-4 bg-slate-950/90 border-r border-slate-800/60 text-slate-600 font-mono text-xs select-none text-right pr-2 hidden sm:block">
-                  {Array.from({ length: 16 }).map((_, i) => (
-                    <div key={i} className="leading-6">
-                      {i + 1}
-                    </div>
-                  ))}
-                </div>
-
-                <textarea
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Paste any job posting, recruitment message, social media ad, or freelance listing here..."
-                  className="flex-1 w-full bg-transparent p-4 font-mono text-sm leading-6 text-slate-200 placeholder-slate-600 resize-none focus:outline-none focus:ring-1 focus:ring-red-500/50"
-                  spellCheck={false}
-                />
-              </div>
+              <textarea
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Paste job posting here..."
+                className="flex-1 w-full h-full min-h-[300px] bg-[#090909] p-3 rounded-lg border border-neutral-800 font-mono text-xs leading-relaxed text-neutral-300 placeholder-neutral-600 resize-none focus:outline-none focus:border-[#7CFF4D]/40"
+                spellCheck={false}
+              />
             ) : (
-              <div className="p-4 space-y-4 bg-slate-950/60 min-h-[380px] flex flex-col justify-between">
+              <div className="flex-1 flex flex-col">
                 {!selectedImage ? (
                   <div
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onClick={() => fileInputRef.current?.click()}
-                    className={`border-2 border-dashed rounded-xl p-8 text-center flex flex-col items-center justify-center cursor-pointer transition-all duration-200 min-h-[260px] ${
-                      isDragOver
-                        ? "border-amber-400 bg-amber-500/10 scale-[0.99]"
-                        : "border-slate-800 hover:border-slate-700 bg-slate-900/40 hover:bg-slate-900/60"
+                    className={`flex-1 border border-dashed rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition min-h-[300px] ${
+                      isDragOver ? "border-[#7CFF4D] bg-[#7CFF4D]/5" : "border-neutral-700 hover:border-neutral-500 bg-[#090909]"
                     }`}
                   >
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                          handleFileSelection(e.target.files[0]);
-                        }
-                      }}
-                      accept="image/png, image/jpeg, image/jpg, image/webp"
-                      className="hidden"
-                    />
-                    <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-amber-400 mb-3 shadow-inner">
-                      <Upload className="w-8 h-8 animate-bounce" />
-                    </div>
-                    <p className="text-sm font-medium text-slate-200">
-                      Click to upload or drag & drop screenshot
-                    </p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      PNG, JPG, JPEG, or WEBP (Max 10MB)
-                    </p>
-                    <div className="mt-4 flex items-center space-x-2 text-[11px] text-slate-400 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
-                      <Cpu className="w-3.5 h-3.5 text-amber-400" />
-                      <span>Automatic In-Browser OCR Text Extraction</span>
-                    </div>
+                    <input type="file" ref={fileInputRef} onChange={(e) => { if (e.target.files && e.target.files.length > 0) handleFileSelection(e.target.files[0]); }} accept="image/*" className="hidden" />
+                    <Upload className="w-8 h-8 text-neutral-500 mb-3" />
+                    <p className="text-sm font-medium text-neutral-300 text-center">Upload job posting screenshot</p>
+                    <p className="text-xs text-neutral-500 mt-1 text-center">Drag & drop or click to upload</p>
+                    <p className="text-[10px] text-neutral-600 mt-4">Supported: PNG, JPG, WEBP</p>
                   </div>
                 ) : (
-                  <div className="space-y-4 flex-1 flex flex-col">
-                    <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800">
-                      <div className="flex items-center space-x-3">
-                        {imagePreviewUrl && (
-                          <img
-                            src={imagePreviewUrl}
-                            alt="Screenshot Preview"
-                            className="w-12 h-12 object-cover rounded-lg border border-slate-700"
-                          />
-                        )}
-                        <div>
-                          <p className="text-xs font-semibold text-slate-200 truncate max-w-[200px] sm:max-w-xs">
-                            {selectedImage.name}
-                          </p>
-                          <p className="text-[11px] text-slate-500">
-                            {(selectedImage.size / 1024).toFixed(1)} KB • Image OCR Ready
-                          </p>
-                        </div>
-                      </div>
-
-                      {ocrConfidence !== null && (
-                        <div className="text-right">
-                          <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">
-                            OCR Confidence: {ocrConfidence}%
-                          </span>
-                        </div>
+                  <div className="flex flex-col space-y-4">
+                    <div className="p-3 rounded-lg border border-neutral-800 bg-[#090909] flex items-center space-x-3">
+                      {imagePreviewUrl && (
+                        <img src={imagePreviewUrl} alt="Preview" className="w-14 h-14 object-cover rounded border border-neutral-700" />
                       )}
-                    </div>
-
-                    <div className="flex-1 flex flex-col">
-                      <div className="flex items-center justify-between text-xs text-slate-400 mb-1 px-1">
-                        <span className="font-mono text-[11px] text-amber-300 flex items-center">
-                          <FileText className="w-3 h-3 mr-1" /> OCR EXTRACTED TEXT (EDITABLE):
-                        </span>
-                        <span className="text-[11px] text-slate-500">
-                          Edit text if needed before re-analyzing
-                        </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-neutral-200 truncate">{selectedImage.name}</p>
+                        <p className="text-[10px] text-neutral-500">{(selectedImage.size / 1024).toFixed(1)} KB</p>
                       </div>
-                      <textarea
-                        value={ocrExtractedText}
-                        onChange={(e) => setOcrExtractedText(e.target.value)}
-                        placeholder="OCR extracted text will appear here..."
-                        className="w-full flex-1 min-h-[160px] p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs leading-relaxed text-slate-200 placeholder-slate-600 resize-none focus:outline-none focus:ring-1 focus:ring-amber-500/50"
-                        spellCheck={false}
-                      />
+                      <button onClick={handleRemoveImage} className="p-1.5 text-neutral-500 hover:text-red-400 hover:bg-red-400/10 rounded transition">
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 )}
               </div>
             )}
+          </div>
+        </div>
 
-            {/* Footer Metrics */}
-            <div className="px-4 py-2 bg-slate-950 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-500">
-              <div className="flex space-x-4">
-                <span>WORDS: {wordCount}</span>
-                <span>CHARS: {charCount}</span>
+        {/* CENTER: OCR EXTRACTED TEXT & ANALYSIS */}
+        <div className="flex flex-col space-y-4">
+          <div className="flex-1 flex flex-col bg-[#0B0F0B] border border-neutral-800/80 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-4 py-3 bg-[#101510] border-b border-neutral-800/80 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <FileText className="w-4 h-4 text-neutral-400" />
+                <h3 className="text-xs font-bold tracking-wider text-neutral-300 uppercase">OCR Extracted Text</h3>
               </div>
-              <span className="text-slate-400 text-[11px]">
-                {inputMode === "text" ? "UTF-8 Direct Input" : "Tesseract.js OCR Layer"}
-              </span>
+              {ocrConfidence !== null && (
+                <span className="text-[10px] font-mono text-neutral-400">OCR Confidence: {ocrConfidence}%</span>
+              )}
+            </div>
+            <div className="flex-1 p-4 flex flex-col">
+              {inputMode === "image" ? (
+                <textarea
+                  value={ocrExtractedText}
+                  onChange={(e) => setOcrExtractedText(e.target.value)}
+                  placeholder="Extracted text will appear here..."
+                  className="flex-1 w-full min-h-[150px] bg-[#090909] p-3 rounded-lg border border-neutral-800 font-mono text-xs leading-relaxed text-neutral-300 focus:outline-none focus:border-[#7CFF4D]/40 resize-none"
+                />
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center text-neutral-600 text-xs font-mono border border-dashed border-neutral-800 rounded-lg p-6 text-center">
+                  Direct Text Input Active.<br/>See left panel.
+                </div>
+              )}
             </div>
           </div>
 
-          {/* OCR Progress Status Bar */}
-          {ocrLoading && (
-            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium flex items-center">
-                  <Cpu className="w-4 h-4 mr-1.5 animate-spin text-amber-400" />
-                  {ocrStage || "Extracting text from image..."}
-                </span>
-                <span className="font-mono font-bold">{ocrProgress}%</span>
+          <div className="bg-[#0B0F0B] border border-neutral-800/80 rounded-xl overflow-hidden p-4">
+            <h3 className="text-xs font-bold tracking-wider text-neutral-400 uppercase mb-3">Analysis Status</h3>
+            <div className="space-y-2 text-xs font-mono text-neutral-500 mb-4">
+              <div className="flex items-center space-x-2">
+                {(inputMode === "text" ? inputText.trim() : ocrExtractedText.trim()) ? <Check className="w-3.5 h-3.5 text-[#7CFF4D]" /> : <div className="w-3.5 h-3.5 border border-neutral-700 rounded-sm" />}
+                <span className={(inputMode === "text" ? inputText.trim() : ocrExtractedText.trim()) ? "text-neutral-300" : ""}>Text extracted</span>
               </div>
-              <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
-                <div
-                  className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-300"
-                  style={{ width: `${ocrProgress}%` }}
-                />
+              <div className="flex items-center space-x-2">
+                {result ? <Check className="w-3.5 h-3.5 text-[#7CFF4D]" /> : loading ? <Cpu className="w-3.5 h-3.5 animate-spin text-neutral-400" /> : <div className="w-3.5 h-3.5 border border-neutral-700 rounded-sm" />}
+                <span className={result ? "text-neutral-300" : ""}>Features analyzed</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                {result ? <Check className="w-3.5 h-3.5 text-[#7CFF4D]" /> : <div className="w-3.5 h-3.5 border border-neutral-700 rounded-sm" />}
+                <span className={result ? "text-neutral-300" : ""}>Scam patterns analyzed</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                {result ? <Check className="w-3.5 h-3.5 text-[#7CFF4D]" /> : <div className="w-3.5 h-3.5 border border-neutral-700 rounded-sm" />}
+                <span className={result ? "text-neutral-300" : ""}>Risk assessment generated</span>
               </div>
             </div>
-          )}
 
-          {/* Action Analyze Button */}
-          <button
-            onClick={() => {
-              if (inputMode === "text") {
-                executeScamAnalysis(inputText, "DIRECT_TEXT");
-              } else {
-                executeScamAnalysis(
-                  ocrExtractedText,
-                  "IMAGE_OCR",
-                  ocrConfidence ?? undefined,
-                  imagePreviewUrl ?? undefined
-                );
-              }
-            }}
-            disabled={
-              isBusy ||
-              (inputMode === "text" ? !inputText.trim() : !ocrExtractedText.trim())
-            }
-            className="w-full relative group overflow-hidden rounded-xl p-0.5 font-semibold text-white transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/10 hover:shadow-red-500/20 active:scale-[0.99] cursor-pointer"
-          >
-            <span className="absolute inset-0 bg-gradient-to-r from-red-600 via-rose-500 to-amber-600 rounded-xl" />
-            <div className="relative px-6 py-3.5 rounded-[10px] bg-slate-950/60 group-hover:bg-slate-950/30 transition duration-200 flex items-center justify-center space-x-2 text-sm font-medium">
+            <button
+              onClick={() => {
+                if (inputMode === "text") {
+                  executeScamAnalysis(inputText, "DIRECT_TEXT");
+                } else {
+                  executeScamAnalysis(
+                    ocrExtractedText,
+                    "IMAGE_OCR",
+                    ocrConfidence ?? undefined,
+                    imagePreviewUrl ?? undefined
+                  );
+                }
+              }}
+              disabled={isBusy || (inputMode === "text" ? !inputText.trim() : !ocrExtractedText.trim())}
+              className="w-full py-2.5 rounded border border-[#7CFF4D]/30 bg-[#7CFF4D]/10 hover:bg-[#7CFF4D]/20 text-[#7CFF4D] font-bold tracking-wide uppercase text-xs transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            >
               {loading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>{analysisStage || "Evaluating Multi-Signal Matrix..."}</span>
+                  <Cpu className="w-4 h-4 animate-spin" />
+                  <span>Analyzing...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>
-                    {inputMode === "text"
-                      ? "Analyze Posting for Fraud Signals"
-                      : "Analyze Extracted Text with Multi-Signal Engine"}
-                  </span>
-                  <ChevronRight className="w-4 h-4 text-slate-300 group-hover:translate-x-0.5 transition" />
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Analyze</span>
                 </>
               )}
-            </div>
-          </button>
-
-          {error && (
-            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs flex items-start space-x-3">
-              <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold">Analysis Notice</p>
-                <p className="mt-0.5 text-slate-400 leading-relaxed">{error}</p>
-              </div>
-            </div>
-          )}
+            </button>
+            {error && <div className="mt-2 text-[10px] text-red-400 font-mono text-center">{error}</div>}
+          </div>
         </div>
 
-        {/* RIGHT PANEL: Audit Report, Signal Breakdown & Document Highlighter */}
-        <div className="lg:col-span-6 flex flex-col space-y-4">
-          {result ? (
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/90 shadow-xl overflow-hidden flex flex-col">
-              {/* Calculated Score Banner */}
-              {(() => {
-                const theme = getScoreTheme(result.score);
-                return (
-                  <div className={`p-6 border-b border-slate-800 ${theme.bg}`}>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <span className="text-xs uppercase font-mono font-semibold tracking-wider text-slate-400">
-                          Multi-Signal Threat Score
-                        </span>
-                        <div className="flex items-baseline space-x-2 mt-1">
-                          <span
-                            className={`text-5xl font-black font-mono tracking-tight ${theme.text}`}
-                          >
-                            {result.score}
-                          </span>
-                          <span className="text-slate-500 font-mono text-sm">/ 100</span>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col items-end space-y-1.5">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-wider ${theme.badge}`}
-                        >
-                          {result.risk_level} RISK
-                        </span>
-                        <span className="text-[11px] font-mono text-slate-400">
-                          {findingsCount} Flagged Term(s)
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="mt-4">
-                      <div className="w-full bg-slate-950/80 rounded-full h-2.5 p-0.5 border border-slate-800 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all duration-700 ease-out ${theme.bar}`}
-                          style={{ width: `${Math.max(result.score, 4)}%` }}
-                        />
-                      </div>
-                      <div className="flex justify-between text-[10px] font-mono text-slate-500 mt-1.5 px-0.5">
-                        <span>0 Safe</span>
-                        <span>25 Low</span>
-                        <span>50 Moderate</span>
-                        <span>75 Critical Fraud</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-
-              
-              {/* Structured Compensation Audit Banner (if detected) */}
-              {result.parsed_salary && (
-                <div className="px-6 py-3.5 border-b border-slate-800 bg-slate-950/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center space-x-2.5">
-                    <div className="p-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
-                      <DollarSign className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs font-bold text-slate-200">
-                          Extracted Salary: {result.parsed_salary.raw_text}
-                        </span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase">
-                          {result.parsed_salary.currency} • {result.parsed_salary.period}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        Annualized: {result.parsed_salary.currency}{" "}
-                        {result.parsed_salary.normalized_annual_avg.toLocaleString()} / year
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    {result.parsed_salary.is_anomalous ? (
-                      <span className="text-[11px] font-semibold font-mono px-2.5 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/40 flex items-center space-x-1">
-                        <AlertTriangle className="w-3 h-3 text-red-400" />
-                        <span>Anomaly (+{result.parsed_salary.risk_contribution} pts)</span>
-                      </span>
-                    ) : (
-                      <span className="text-[11px] font-semibold font-mono px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center space-x-1">
-                        <Check className="w-3 h-3 text-emerald-400" />
-                        <span>Market Aligned (0 pts)</span>
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* View Switcher Tabs */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-950/60 overflow-x-auto">
-                <div className="flex space-x-1.5">
-                  <button
-                    onClick={() => setActiveTab("highlighted")}
-                    className={`text-xs px-2.5 py-1.5 rounded-lg font-medium transition flex items-center space-x-1 cursor-pointer whitespace-nowrap ${
-                      activeTab === "highlighted"
-                        ? "bg-slate-800 text-white border border-slate-700"
-                        : "text-slate-400 hover:text-slate-200"
-                    }`}
-                  >
-                    <FileSearch className="w-3.5 h-3.5" />
-                    <span>Highlighter</span>
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("breakdown")}
-                    className={`text-xs px-2.5 py-1.5 rounded-lg font-medium transition flex items-center space-x-1 cursor-pointer whitespace-nowrap ${
-                      activeTab === "breakdown"
-                        ? "bg-slate-800 text-white border border-slate-700"
-                        : "text-slate-400 hover:text-slate-200"
-                    }`}
-                  >
-                    <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Signal Breakdown</span>
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("findings")}
-                    className={`text-xs px-2.5 py-1.5 rounded-lg font-medium transition flex items-center space-x-1 cursor-pointer whitespace-nowrap ${
-                      activeTab === "findings"
-                        ? "bg-slate-800 text-white border border-slate-700"
-                        : "text-slate-400 hover:text-slate-200"
-                    }`}
-                  >
-                    <Layers className="w-3.5 h-3.5" />
-                    <span>Rationales ({findingsCount})</span>
-                  </button>
-                  {result.image_preview && (
-                    <button
-                      onClick={() => setActiveTab("image_preview")}
-                      className={`text-xs px-2.5 py-1.5 rounded-lg font-medium transition flex items-center space-x-1 cursor-pointer whitespace-nowrap ${
-                        activeTab === "image_preview"
-                          ? "bg-slate-800 text-white border border-slate-700"
-                          : "text-slate-400 hover:text-slate-200"
-                      }`}
-                    >
-                      <Eye className="w-3.5 h-3.5 text-amber-400" />
-                      <span>Screenshot</span>
-                    </button>
-                  )}
-                </div>
-
-                <button
-                  onClick={handleCopyReport}
-                  className="text-xs text-slate-400 hover:text-slate-200 flex items-center space-x-1 hover:bg-slate-800 px-2 py-1 rounded-md transition cursor-pointer flex-shrink-0"
-                  title="Copy Audit Report"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400 font-medium">Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3.5 h-3.5" />
-                      <span>Copy</span>
-                    </>
-                  )}
-                </button>
+        {/* RIGHT: THREAT ASSESSMENT */}
+        <div className="flex flex-col bg-[#0B0F0B] border border-neutral-800/80 rounded-xl overflow-hidden shadow-lg h-full max-h-[800px]">
+          <div className="px-4 py-3 bg-[#101510] border-b border-neutral-800/80 flex items-center justify-between">
+            <h3 className="text-xs font-bold tracking-wider text-neutral-300 uppercase">Threat Assessment</h3>
+            {result && (
+              <span className="text-[10px] font-mono text-neutral-500">SCORE: {result.score}/100</span>
+            )}
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-4 flex flex-col space-y-6">
+            {!result ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-neutral-600 text-xs font-mono text-center space-y-2">
+                <ShieldAlert className="w-8 h-8 opacity-20" />
+                <p>Awaiting analysis...</p>
               </div>
+            ) : (
+              <>
+                {/* Score Section */}
+                <div className="flex flex-col">
+                  {(() => {
+                    const theme = getScoreTheme(result.score);
+                    return (
+                      <>
+                        <div className="flex items-end justify-between mb-2">
+                          <span className={`text-4xl font-bold font-mono ${theme.text}`}>{result.score}</span>
+                          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded border ${theme.badge}`}>
+                            {result.risk_level} RISK
+                          </span>
+                        </div>
+                        <div className="w-full bg-neutral-900 rounded-sm h-1.5 flex overflow-hidden">
+                          <div className={`h-full transition-all duration-1000 ${theme.bg.replace('/10', '')} ${theme.text.replace('text-', 'bg-')}`} style={{ width: `${Math.max(result.score, 2)}%` }} />
+                        </div>
+                        <div className="flex justify-between text-[9px] font-mono text-neutral-500 mt-1">
+                          <span>0 SAFE</span>
+                          <span>25 LOW</span>
+                          <span>50 MOD</span>
+                          <span>75 HIGH</span>
+                          <span>100 CRIT</span>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
 
-              {/* Tab Contents */}
-              <div className="p-6 flex-1 overflow-y-auto max-h-[460px]">
-                {activeTab === "highlighted" ? (
+                {/* Flagged Content */}
+                {result.flagged_terms && result.flagged_terms.length > 0 && (
                   <div>
-                    <div className="mb-3 flex items-center justify-between">
-                      <div className="text-xs text-slate-400 flex items-center space-x-1.5">
-                        <Info className="w-3.5 h-3.5 text-amber-400" />
-                        <span>
-                          {result.flagged_terms && result.flagged_terms.length > 0
-                            ? "Suspicious semantic terms highlighted with glowing markers:"
-                            : "Clean text: No high-risk scam patterns detected."}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/90 shadow-inner">
-                      {renderHighlightedDocument()}
-                    </div>
-                  </div>
-                ) : activeTab === "breakdown" ? (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between text-xs text-slate-400">
-                      <span>Multi-Signal Contribution Breakdown:</span>
-                      <span className="font-mono text-slate-300 font-semibold">Total: {result.score}/100</span>
-                    </div>
-
-                    <div className="space-y-2">
-                      {result.signal_breakdown && result.signal_breakdown.length > 0 ? (
-                        result.signal_breakdown.map((item, idx) => (
-                          <div
-                            key={idx}
-                            className={`p-3 rounded-xl border flex items-start justify-between gap-3 ${
-                              item.score_impact < 0
-                                ? "bg-emerald-950/20 border-emerald-800/50 text-emerald-300"
-                                : item.score_impact >= 35
-                                ? "bg-red-950/20 border-red-800/50 text-red-200"
-                                : "bg-amber-950/20 border-amber-800/50 text-amber-200"
-                            }`}
-                          >
-                            <div>
-                              <div className="flex items-center space-x-2">
-                                <span className="text-xs font-semibold">{item.category}</span>
-                              </div>
-                              <p className="text-[11px] text-slate-400 mt-0.5">{item.description}</p>
-                            </div>
-                            <span
-                              className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
-                                item.score_impact < 0
-                                  ? "bg-emerald-500/20 text-emerald-400"
-                                  : item.score_impact >= 35
-                                  ? "bg-red-500/20 text-red-400"
-                                  : "bg-amber-500/20 text-amber-400"
-                              }`}
-                            >
-                              {item.score_impact > 0 ? `+${item.score_impact}` : item.score_impact} pts
-                            </span>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="text-center py-6 text-slate-400 text-xs">
-                          No active risk signals triggered.
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Legitimacy Dampeners Section */}
-                    {result.legitimacy_signals && result.legitimacy_signals.length > 0 && (
-                      <div className="mt-4 p-3.5 rounded-xl bg-emerald-950/20 border border-emerald-800/40">
-                        <div className="flex items-center space-x-2 text-xs text-emerald-400 font-semibold mb-2">
-                          <Award className="w-4 h-4" />
-                          <span>Legitimacy Indicators & Dampeners Detected:</span>
-                        </div>
-                        <ul className="space-y-1 text-[11px] text-slate-300 list-disc list-inside">
-                          {result.legitimacy_signals.map((sig, i) => (
-                            <li key={i}>{sig}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                ) : activeTab === "image_preview" && result.image_preview ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-xs text-slate-400">
-                      <span>Source Screenshot (OCR Target):</span>
-                      <span className="font-mono text-amber-400">
-                        OCR Confidence: {result.ocr_confidence ?? 90}%
-                      </span>
-                    </div>
-                    <div className="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2 flex justify-center">
-                      <img
-                        src={result.image_preview}
-                        alt="Scanned Screenshot"
-                        className="max-h-[360px] object-contain rounded-lg shadow-md"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {findingsCount === 0 ? (
-                      <div className="text-center py-10 text-slate-400 text-sm">
-                        <ShieldCheck className="w-10 h-10 text-emerald-400 mx-auto mb-2 opacity-80" />
-                        <p className="text-emerald-300 font-semibold mb-1">Safe Content Verified</p>
-                        <p className="text-xs text-slate-500">
-                          No recognized scam indicators or advance-fee patterns were detected in this content.
-                        </p>
-                      </div>
-                    ) : (
-                      (result.findings || []).map((finding, idx) => (
-                        <div
-                          key={idx}
-                          className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 transition"
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="text-xs font-mono font-bold text-red-300 bg-red-500/20 px-2 py-0.5 rounded border border-red-500/30">
-                                "{finding.matched_term}"
+                    <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-2">Flagged Content</h4>
+                    <div className="p-3 bg-[#090909] border border-neutral-800 rounded font-mono text-[11px] leading-relaxed text-neutral-300 whitespace-pre-wrap">
+                      {(() => {
+                        const text = inputMode === "text" ? inputText : ocrExtractedText;
+                        const terms = [...result.flagged_terms].sort((a,b)=>b.length - a.length);
+                        const escaped = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+                        const regex = new RegExp(`(${escaped.join("|")})`, "gi");
+                        const parts = text.split(regex);
+                        return parts.map((part, i) => {
+                          if (terms.some(t => t.toLowerCase() === part.toLowerCase())) {
+                            return (
+                              <span key={i} className="inline-flex items-center bg-[#2A0808] border border-red-900/50 text-red-300 px-1 py-0.5 mx-0.5 rounded">
+                                <span>{part}</span> <span className="ml-1 text-[8px] bg-red-900/80 text-red-200 px-1 rounded uppercase">FLAGGED</span>
                               </span>
-                              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">
-                                {finding.category}
-                              </span>
-                            </div>
-                            <span className="text-xs font-mono font-bold text-red-400 flex-shrink-0">
-                              +{finding.weight} Risk
-                            </span>
-                          </div>
-                          <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                            {finding.rationale}
-                          </p>
-                        </div>
-                      ))
-                    )}
+                            );
+                          }
+                          return <span key={i}>{part}</span>;
+                        });
+                      })()}
+                    </div>
                   </div>
                 )}
-              </div>
-            </div>
-          ) : (
-            <div className="h-[460px] flex flex-col items-center justify-center p-8 rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 text-center">
-              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-500 mb-4 shadow-inner">
-                <FileSearch className="w-10 h-10" />
-              </div>
-              <h3 className="text-base font-semibold text-slate-300">Ready for Multi-Signal Audit</h3>
-              <p className="mt-1 text-xs text-slate-500 max-w-sm">
-                Paste any job posting or upload a screenshot on the left to extract text and evaluate multi-signal fraud patterns.
-              </p>
-            </div>
-          )}
+
+                {/* Risk Breakdown */}
+                {result.signal_breakdown && result.signal_breakdown.length > 0 && (
+                  <div>
+                    <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-2">Risk Breakdown</h4>
+                    <div className="space-y-1">
+                      {result.signal_breakdown.map((item, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-[11px] bg-neutral-900/50 p-1.5 rounded">
+                          <span className="text-neutral-300 truncate mr-2" title={item.category}>{item.category}</span>
+                          <span className={`font-mono font-bold flex-shrink-0 ${item.score_impact > 0 ? "text-orange-400" : "text-[#7CFF4D]"}`}>
+                            {item.score_impact > 0 ? `+${item.score_impact}` : item.score_impact}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Rationales */}
+                {result.findings && result.findings.length > 0 && (
+                  <div>
+                    <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-2">Rationales</h4>
+                    <div className="space-y-2">
+                      {result.findings.map((finding, idx) => (
+                        <div key={idx} className="text-[11px] border-l-2 border-neutral-700 pl-2">
+                          <span className="font-bold text-neutral-300 uppercase block mb-0.5">{finding.category}</span>
+                          <span className="text-neutral-400 leading-relaxed">{finding.rationale}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
