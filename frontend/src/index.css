@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@layer base {
+  html, body {
+    @apply bg-slate-950 text-slate-50 min-h-screen;
+  }
+}
+
+/* Custom vibrant accents can be added here or used directly in classes */
