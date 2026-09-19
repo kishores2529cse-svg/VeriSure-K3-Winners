@@ -6,6 +6,7 @@ import ProctorVision from "./pages/ProctorVision";
 import ScamLists from "./pages/ScamLists";
 import LandingPage from "./pages/Landing/LandingPage";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -23,9 +24,7 @@ function App() {
           <Route index element={<HomeDashboard />} />
 
         </Route>
-        <Route path="/upi" element={<DashboardLayout />}>
-          <Route index element={<UpiGuard />} />
-        </Route>
+
         <Route path="/scam-scanner" element={<DashboardLayout />}>
           <Route index element={<ScamScanner />} />
         </Route>
