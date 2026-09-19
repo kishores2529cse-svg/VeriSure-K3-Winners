@@ -2,7 +2,8 @@
 
 @layer base {
   html, body {
-    @apply bg-slate-950 text-slate-50 min-h-screen;
+    @apply min-h-screen bg-[#f4f7f8] text-slate-950;
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
   }
 }
 

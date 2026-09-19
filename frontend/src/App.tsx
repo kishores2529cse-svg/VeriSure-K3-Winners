@@ -4,6 +4,7 @@ import HomeDashboard from "./pages/HomeDashboard";
 import UpiGuard from "./pages/UpiGuard";
 import ScamScanner from "./pages/ScamScanner";
 import ProctorVision from "./pages/ProctorVision";
+import ScamLists from "./pages/ScamLists";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="upi" element={<UpiGuard />} />
           <Route path="scam-scanner" element={<ScamScanner />} />
           <Route path="proctor" element={<ProctorVision />} />
+          <Route path="scam-lists" element={<ScamLists />} />
         </Route>
       </Routes>
     </BrowserRouter>
