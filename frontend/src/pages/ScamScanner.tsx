@@ -729,78 +729,113 @@ Timestamp: ${new Date(result.analyzed_at).toLocaleString()}`;
                             {result.risk_level} RISK
                           </span>
                         </div>
-                        <div className="w-full bg-neutral-900 rounded-sm h-1.5 flex overflow-hidden">
-                          <div className={`h-full transition-all duration-1000 ${theme.bg.replace('/10', '')} ${theme.text.replace('text-', 'bg-')}`} style={{ width: `${Math.max(result.score, 2)}%` }} />
+                        <div className="w-full bg-neutral-900 rounded-sm h-1.5 flex overflow-hidden relative">
+                          <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-teal-500 via-emerald-500 via-yellow-500 to-red-500" />
+                          <div className="absolute top-0 right-0 h-full bg-[#090909] z-0" style={{ width: `${100 - Math.max(result.score, 2)}%` }} />
+                          <div className="absolute top-0 bottom-0 w-[2px] bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)] z-10" style={{ left: `${Math.max(result.score, 2)}%` }} />
                         </div>
-                        <div className="flex justify-between text-[9px] font-mono text-neutral-500 mt-1">
-                          <span>0 SAFE</span>
-                          <span>25 LOW</span>
-                          <span>50 MOD</span>
-                          <span>75 HIGH</span>
-                          <span>100 CRIT</span>
+                        <div className="flex justify-between text-[9px] font-mono text-neutral-500 mt-1 relative h-3">
+                          <span className="absolute left-0">0 Safe</span>
+                          <span className="absolute left-1/4 -translate-x-1/2">25</span>
+                          <span className="absolute left-1/2 -translate-x-1/2">50 Moderate</span>
+                          <span className="absolute left-3/4 -translate-x-1/2">75 High</span>
+                          <span className="absolute right-0">100 Critical</span>
                         </div>
                       </>
                     );
                   })()}
                 </div>
 
-                {/* Flagged Content */}
-                {result.flagged_terms && result.flagged_terms.length > 0 && (
-                  <div>
-                    <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-2">Flagged Content</h4>
-                    <div className="p-3 bg-[#090909] border border-neutral-800 rounded font-mono text-[11px] leading-relaxed text-neutral-300 whitespace-pre-wrap">
-                      {(() => {
-                        const text = inputMode === "text" ? inputText : ocrExtractedText;
-                        const terms = [...result.flagged_terms].sort((a,b)=>b.length - a.length);
-                        const escaped = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-                        const regex = new RegExp(`(${escaped.join("|")})`, "gi");
-                        const parts = text.split(regex);
-                        return parts.map((part, i) => {
-                          if (terms.some(t => t.toLowerCase() === part.toLowerCase())) {
-                            return (
-                              <span key={i} className="inline-flex items-center bg-[#2A0808] border border-red-900/50 text-red-300 px-1 py-0.5 mx-0.5 rounded">
-                                <span>{part}</span> <span className="ml-1 text-[8px] bg-red-900/80 text-red-200 px-1 rounded uppercase">FLAGGED</span>
-                              </span>
-                            );
-                          }
-                          return <span key={i}>{part}</span>;
-                        });
-                      })()}
-                    </div>
-                  </div>
-                )}
+                {/* View Switcher Tabs */}
+                <div className="flex items-center space-x-2 border-b border-neutral-800 pb-2 mt-4">
+                  <button onClick={() => setActiveTab("highlighted")} className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded transition flex items-center space-x-1.5 ${activeTab === 'highlighted' ? 'bg-neutral-800 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}>
+                    <FileSearch className="w-3.5 h-3.5" /> <span>Document View</span>
+                  </button>
+                  <button onClick={() => setActiveTab("findings")} className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded transition flex items-center space-x-1.5 ${activeTab === 'findings' ? 'bg-neutral-800 text-white' : 'text-neutral-500 hover:text-neutral-300'}`}>
+                    <Layers className="w-3.5 h-3.5" /> <span>Rationales ({findingsCount})</span>
+                  </button>
+                  <button onClick={handleCopyReport} className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded transition flex items-center space-x-1.5 text-neutral-500 hover:text-neutral-300 ml-auto">
+                    {copied ? <Check className="w-3.5 h-3.5 text-[#7CFF4D]" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copied ? "Copied" : "Copy Report"}</span>
+                  </button>
+                </div>
 
-                {/* Risk Breakdown */}
-                {result.signal_breakdown && result.signal_breakdown.length > 0 && (
-                  <div>
-                    <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-2">Risk Breakdown</h4>
-                    <div className="space-y-1">
-                      {result.signal_breakdown.map((item, idx) => (
-                        <div key={idx} className="flex items-center justify-between text-[11px] bg-neutral-900/50 p-1.5 rounded">
-                          <span className="text-neutral-300 truncate mr-2" title={item.category}>{item.category}</span>
-                          <span className={`font-mono font-bold flex-shrink-0 ${item.score_impact > 0 ? "text-orange-400" : "text-[#7CFF4D]"}`}>
-                            {item.score_impact > 0 ? `+${item.score_impact}` : item.score_impact}
-                          </span>
+                <div className="mt-2 space-y-6">
+                  {activeTab === "highlighted" && (
+                    <>
+                      {/* Flagged Content */}
+                      {result.flagged_terms && result.flagged_terms.length > 0 && (
+                        <div className="flex items-center space-x-2 text-[10px] bg-orange-500/10 border border-orange-500/30 text-orange-400 px-3 py-2 rounded">
+                          <AlertTriangle className="w-3.5 h-3.5" />
+                          <span>Suspicious terms highlighted with glowing badges</span>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                      )}
+                      
+                      {result.flagged_terms && result.flagged_terms.length > 0 && (
+                        <div className="p-3 bg-[#090909] border border-neutral-800 rounded font-mono text-[11px] leading-relaxed text-neutral-300 whitespace-pre-wrap">
+                          {(() => {
+                            const text = inputMode === "text" ? inputText : ocrExtractedText;
+                            const terms = [...result.flagged_terms].sort((a,b)=>b.length - a.length);
+                            const escaped = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+                            const regex = new RegExp(`(${escaped.join("|")})`, "gi");
+                            const parts = text.split(regex);
+                            return parts.map((part, i) => {
+                              if (terms.some(t => t.toLowerCase() === part.toLowerCase())) {
+                                return (
+                                  <span key={i} className="inline-flex items-center bg-[#2A0808] border border-red-900/50 text-red-300 px-1 py-0.5 mx-0.5 rounded shadow-[0_0_8px_rgba(239,68,68,0.2)]">
+                                    <span>{part}</span> <span className="ml-1 text-[8px] bg-red-900/80 text-red-200 px-1 rounded uppercase">FLAGGED</span>
+                                  </span>
+                                );
+                              }
+                              return <span key={i}>{part}</span>;
+                            });
+                          })()}
+                        </div>
+                      )}
 
-                {/* Rationales */}
-                {result.findings && result.findings.length > 0 && (
-                  <div>
-                    <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-2">Rationales</h4>
-                    <div className="space-y-2">
-                      {result.findings.map((finding, idx) => (
-                        <div key={idx} className="text-[11px] border-l-2 border-neutral-700 pl-2">
-                          <span className="font-bold text-neutral-300 uppercase block mb-0.5">{finding.category}</span>
-                          <span className="text-neutral-400 leading-relaxed">{finding.rationale}</span>
+                      {/* Risk Breakdown */}
+                      {result.signal_breakdown && result.signal_breakdown.length > 0 && (
+                        <div>
+                          <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-2 flex justify-between items-center">
+                            <span>Risk Breakdown</span>
+                            <span className="text-cyan-500 hover:text-cyan-400 cursor-pointer">View Details →</span>
+                          </h4>
+                          <div className="space-y-1">
+                            {result.signal_breakdown.map((item, idx) => (
+                              <div key={idx} className="flex items-center justify-between text-[11px] bg-neutral-900/50 p-1.5 rounded">
+                                <span className="text-neutral-300 truncate mr-2" title={item.category}>{item.category}</span>
+                                <span className={`font-mono font-bold flex-shrink-0 ${item.score_impact > 0 ? "text-orange-400" : "text-[#7CFF4D]"}`}>
+                                  {item.score_impact > 0 ? `+${item.score_impact}` : item.score_impact}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                      )}
+                    </>
+                  )}
+
+                  {activeTab === "findings" && (
+                    <>
+                      {/* Rationales */}
+                      {result.findings && result.findings.length > 0 ? (
+                        <div>
+                          <h4 className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-2">Rationales</h4>
+                          <div className="space-y-2">
+                            {result.findings.map((finding, idx) => (
+                              <div key={idx} className="text-[11px] border-l-2 border-neutral-700 pl-2">
+                                <span className="font-bold text-neutral-300 uppercase block mb-0.5">{finding.category}</span>
+                                <span className="text-neutral-400 leading-relaxed">{finding.rationale}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center py-6 text-neutral-500 text-xs">No rationales found.</div>
+                      )}
+                    </>
+                  )}
+                </div>
 
               </>
             )}
