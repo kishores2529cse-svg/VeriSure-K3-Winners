@@ -31,7 +31,7 @@ var (
 	gbpCurrencyRegex = regexp.MustCompile(`(?i)(?:£|gbp|pounds?)`)
 
 	// Context keywords indicating compensation
-	salaryContextRegex = regexp.MustCompile(`(?i)\b(?:salary|pay|payout|earn|earning|earnings|compensation|income|stipend|package|ctc|lpa|remuneration|wage|wages)\b`)
+	salaryContextRegex = regexp.MustCompile(`(?i)\b(?:salary|pay|payout|earn|earning|earnings|compensation|income|stipend|package|ctc|lpa|remuneration|wage|wages|give\s+you|pay\s+you)\b`)
 
 	// Units of duration, count, or non-salary metrics that must NOT be confused with salary
 	unitDurationCountRegex = regexp.MustCompile(`(?i)^\s*(?:minutes?|mins?|seconds?|secs?|hours?|hrs?|days?(?:\s+of|\s+leave|\s+off)?|weeks?(?:\s+of|\s+leave)?|months?(?:\s+of|\s+leave)?|years?(?:\s+old|\s+or\s+older)?|openings?|vacancies?|positions?|slots?|candidates?|people|percent|%|km|miles)\b`)
@@ -40,10 +40,10 @@ var (
 	nonSalaryContextRegex = regexp.MustCompile(`(?i)\b(?:laptop|phone|iphone|macbook|device|gadget|registration\s+fee|processing\s+fee|security\s+deposit|onboarding\s+fee|verification\s+fee|starter\s+kit|kit|delivery|courier|fee|fees|deposit|charge|charges|cost|buy|purchase|invest|investment|price)\b`)
 
 	// Range salary regex: e.g. "$200 to $500 per day", "$50,000 - $80,000/year", "USD 80K - 120K annually", "₹6,00,000 - ₹10,00,000/year", "₹5 LPA - ₹8 LPA", "$50K to $80K per year"
-	rangeSalaryRegex = regexp.MustCompile(`(?i)(?:(?:salary|pay|compensation|earn|income|package|ctc|stipend|between)\s*[:\s-]*)?([$₹€£]|usd|inr|rs\.?|eur|gbp)?\s*([0-9]+(?:[.,][0-9]+)*)\s*([kKmM]|lakh|lakhs|lac|lacs|crore|crores|cr|lpa)?\s*(?:-|to|–)\s*([$₹€£]|usd|inr|rs\.?|eur|gbp)?\s*([0-9]+(?:[.,][0-9]+)*)\s*([kKmM]|lakh|lakhs|lac|lacs|crore|crores|cr|lpa)?\s*([$₹€£]|usd|inr|rs\.?|eur|gbp|dollars?|rupees?|euros?|pounds?)?\s*(?:per\s+(?:hour|hr|day|week|month|year|annum)|/(?:hour|hr|day|week|month|year|hr|mo|yr)|hourly|daily|weekly|monthly|yearly|annually|annual|per\s+annum|p\.a\.|pa|p\.m\.|pm|lpa)?\b`)
+	rangeSalaryRegex = regexp.MustCompile(`(?i)(?:(?:salary|pay|compensation|earn|income|package|ctc|stipend|between|give\s+you)\s*[:\s-]*)?([$₹€£]|usd|inr|rs\.?|eur|gbp)?\s*([0-9]+(?:[.,][0-9]+)*)\s*([kKmM]|lakh|lakhs|lac|lacs|crore|crores|cr|lpa)?\s*(?:-|to|–)\s*([$₹€£]|usd|inr|rs\.?|eur|gbp)?\s*([0-9]+(?:[.,][0-9]+)*)\s*([kKmM]|lakh|lakhs|lac|lacs|crore|crores|cr|lpa)?\s*([$₹€£]|usd|inr|rs\.?|eur|gbp|dollars?|rupees?|euros?|pounds?)?\s*(?:per\s+(?:hour|hr|day|week|month|year|annum)|/(?:hour|hr|day|week|month|year|hr|mo|yr)|hourly|daily|weekly|monthly|yearly|annually|annual|per\s+annum|p\.a\.|pa|p\.m\.|pm|lpa)?\b`)
 
 	// Single salary regex with currency or context
-	singleSalaryRegex = regexp.MustCompile(`(?i)(?:(?:salary|pay|payout|compensation|earn|earnings|income|package|ctc|stipend)\s*(?:is|of|over|above|around|upto|up\s+to|:|-)?\s+)?([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp)?\s*([0-9]+(?:[.,][0-9]+)*)\s*([kKmM]|lakh|lakhs|lac|lacs|crore|crores|cr|lpa)\s*(?:([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp|dollars?|rupees?|euros?|pounds?))?\s*(?:per\s+(?:hour|hr|day|week|month|year|annum)|/(?:hour|hr|day|week|month|year|hr|mo|yr)|hourly|daily|weekly|monthly|yearly|annually|annual|per\s+annum|p\.a\.|pa|p\.m\.|pm|lpa)?\b|(?:(?:salary|pay|payout|compensation|earn|earnings|income|package|ctc|stipend)\s*(?:is|of|over|above|around|upto|up\s+to|:|-)?\s+)?([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp)\s*([0-9]+(?:[.,][0-9]+)*)\s*(?:([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp|dollars?|rupees?|euros?|pounds?))?\s*(?:per\s+(?:hour|hr|day|week|month|year|annum)|/(?:hour|hr|day|week|month|year|hr|mo|yr)|hourly|daily|weekly|monthly|yearly|annually|annual|per\s+annum|p\.a\.|pa|p\.m\.|pm|lpa)\b|(?:(?:salary|pay|payout|compensation|earn|earnings|income|package|ctc|stipend)\s*(?:is|of|over|above|around|upto|up\s+to|:|-)?\s+)([0-9]+(?:[.,][0-9]+)*)\s*(?:([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp|dollars?|rupees?|euros?|pounds?))?\s*(?:per\s+(?:hour|hr|day|week|month|year|annum)|/(?:hour|hr|day|week|month|year|hr|mo|yr)|hourly|daily|weekly|monthly|yearly|annually|annual|per\s+annum|p\.a\.|pa|p\.m\.|pm|lpa)?\b`)
+	singleSalaryRegex = regexp.MustCompile(`(?i)(?:(?:salary|pay|payout|compensation|earn|earnings|income|package|ctc|stipend|give\s+you|pay\s+you)\s*(?:is|of|over|above|around|upto|up\s+to|:|-)?\s+)?([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp)?\s*([0-9]+(?:[.,][0-9]+)*)\s*([kKmM]|lakh|lakhs|lac|lacs|crore|crores|cr|lpa)\s*(?:([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp|dollars?|rupees?|euros?|pounds?))?\s*(?:per\s+(?:hour|hr|day|week|month|year|annum)|/(?:hour|hr|day|week|month|year|hr|mo|yr)|hourly|daily|weekly|monthly|yearly|annually|annual|per\s+annum|p\.a\.|pa|p\.m\.|pm|lpa)?\b|(?:(?:salary|pay|payout|compensation|earn|earnings|income|package|ctc|stipend|give\s+you|pay\s+you)\s*(?:is|of|over|above|around|upto|up\s+to|:|-)?\s+)?([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp)\s*([0-9]+(?:[.,][0-9]+)*)\s*(?:([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp|dollars?|rupees?|euros?|pounds?))?\s*(?:per\s+(?:hour|hr|day|week|month|year|annum)|/(?:hour|hr|day|week|month|year|hr|mo|yr)|hourly|daily|weekly|monthly|yearly|annually|annual|per\s+annum|p\.a\.|pa|p\.m\.|pm|lpa)\b|(?:(?:salary|pay|payout|compensation|earn|earnings|income|package|ctc|stipend|give\s+you|pay\s+you)\s*(?:is|of|over|above|around|upto|up\s+to|:|-)?\s+)([0-9]+(?:[.,][0-9]+)*)\s*(?:([$₹€£]|usd|us\$|inr|rs\.?|eur|gbp|dollars?|rupees?|euros?|pounds?))?\s*(?:per\s+(?:hour|hr|day|week|month|year|annum)|/(?:hour|hr|day|week|month|year|hr|mo|yr)|hourly|daily|weekly|monthly|yearly|annually|annual|per\s+annum|p\.a\.|pa|p\.m\.|pm|lpa)?\b`)
 )
 
 // normalizeCurrency detects and canonicalizes currency string
@@ -250,7 +250,7 @@ func ParseSalary(content string) *ParsedSalary {
 		candidates = append(candidates, res)
 	}
 
-	// 2. Check Single Salary Matches e.g. "$2,000/week", "$5,000/month", "$60,000/year", "$60K/year", "$25/hour", "₹50,000/month", "₹6 LPA", "6 LPA"
+	// 2. Check Single Salary Matches e.g. "$2,000/week", "$2000 per day", "$5,000/month", "$60,000/year", "$60K/year", "$25/hour", "₹50,000/month", "₹6 LPA", "6 LPA"
 	singleMatches := singleSalaryRegex.FindAllStringSubmatchIndex(content, -1)
 	for _, matchIdx := range singleMatches {
 		rawMatched := content[matchIdx[0]:matchIdx[1]]
@@ -330,7 +330,7 @@ func ParseSalary(content string) *ParsedSalary {
 			defaultPeriod = "year"
 		} else if strings.Contains(strings.ToLower(rawMatched), "week") || strings.Contains(strings.ToLower(rawMatched), "weekly") || strings.Contains(strings.ToLower(surrounding), "weekly") {
 			defaultPeriod = "week"
-		} else if strings.Contains(strings.ToLower(rawMatched), "day") || strings.Contains(strings.ToLower(rawMatched), "daily") || strings.Contains(strings.ToLower(surrounding), "daily") {
+		} else if strings.Contains(strings.ToLower(rawMatched), "day") || strings.Contains(strings.ToLower(rawMatched), "daily") || strings.Contains(strings.ToLower(surrounding), "daily") || strings.Contains(strings.ToLower(surrounding), "per day") {
 			defaultPeriod = "day"
 		} else if strings.Contains(strings.ToLower(rawMatched), "hour") || strings.Contains(strings.ToLower(rawMatched), "hr") {
 			defaultPeriod = "hour"
@@ -341,7 +341,7 @@ func ParseSalary(content string) *ParsedSalary {
 		period := detectPeriod(rawMatched, defaultPeriod)
 		if period == "year" && (strings.Contains(strings.ToLower(surrounding), "weekly salary") || strings.Contains(strings.ToLower(surrounding), "per week")) {
 			period = "week"
-		} else if period == "year" && (strings.Contains(strings.ToLower(surrounding), "daily salary") || strings.Contains(strings.ToLower(surrounding), "per day")) {
+		} else if period == "year" && (strings.Contains(strings.ToLower(surrounding), "daily salary") || strings.Contains(strings.ToLower(surrounding), "per day") || strings.Contains(strings.ToLower(surrounding), "daily")) {
 			period = "day"
 		}
 
@@ -398,15 +398,28 @@ func EvaluateSalaryAnomaly(salary *ParsedSalary, content string) {
 	lower := strings.ToLower(content)
 
 	// Identify role archetype & suspicious signals
+	isAbsurdOrIncoherent := regexp.MustCompile(`(?i)\b(?:stand\s+near\s+me|stay\s+with\s+me|sit\s+(?:near|next\s+to|beside)\s+me|survive\s+in\s+the\s+footer|best\s+of\s+vector|god\s+bless\s+you|for\s+\d+\s+years\s+and\s+stand|give\s+you\s+[$₹€£]\s*\d+)\b`).MatchString(lower)
 	isTaskScamClues := regexp.MustCompile(`(?i)\b(?:update\s+(?:their\s+)?data|help\s+merchants|minutes?\s+daily|anytime,\s*anywhere|order\s+grabbing|rating\s+apps?|like\s+and\s+subscribe|free\s+training|20\s+to\s+60\s+minutes|data\s+entry|typing|copy\s+paste|simple\s+tasks?)\b`).MatchString(lower)
 	isTechOrSenior := regexp.MustCompile(`(?i)\b(?:senior|lead|architect|software\s+engineer|developer|full\s+stack|backend|frontend|data\s+scientist|machine\s+learning|devops|cloud\s+engineer|bachelor['']s|master['']s|computer\s+science|3\+\s+years|5\+\s+years)\b`).MatchString(lower)
 	isInternship := regexp.MustCompile(`(?i)\b(?:intern|internship|trainee|apprentice|research\s+assistant|student)\b`).MatchString(lower)
-	isNoExperience := regexp.MustCompile(`(?i)\b(?:no\s+experience(?:\s+required|\s+needed)?|freshers?\s+can\s+apply|zero\s+experience|no\s+skills?\s+needed|no\s+qualifications?|no\s+interview)\b`).MatchString(lower)
+	isNoExperience := regexp.MustCompile(`(?i)\b(?:no\s+experience(?:\s+required|\s+needed)?|freshers?\s+can\s+apply|for\s+freshers?|zero\s+experience|no\s+skills?\s+needed|no\s+qualifications?|no\s+interview)\b`).MatchString(lower)
 	isGuaranteedDaily := regexp.MustCompile(`(?i)\b(?:guaranteed\s+(?:daily|monthly)\s+income|daily\s+payout|earn\s+daily|100%\s+daily\s+profit|earn\s+[$₹€£]\s*[0-9]+(?:\s*to\s*[$₹€£]?\s*[0-9]+)?\s*per\s+day)\b`).MatchString(lower)
 
 	annVal := salary.NormalizedAnnualAvg
 
-	// 1. Task Scams / Merchant Data Updating / Micro-Work with Inflated Payouts (e.g. $200-$500/day or $2,000/week)
+	// 1. Extreme / Astronomical Daily Pay & Absurd Demands (e.g. $2000 per day = $520,000/yr!)
+	if (salary.Period == "day" && salary.Amount >= 500) || (salary.Period == "hour" && salary.Amount >= 100) || (annVal >= 250000 && !isTechOrSenior) || isAbsurdOrIncoherent {
+		salary.IsAnomalous = true
+		salary.RiskContribution = 50
+		if salary.Currency == "USD" {
+			salary.AnomalyReason = fmt.Sprintf("Astronomical payout claim of %s ($%.0f/year equivalent) is completely unrealistic for zero-qualification or incoherent work.", salary.RawText, annVal)
+		} else {
+			salary.AnomalyReason = fmt.Sprintf("Astronomical payout claim of %s (₹%.0f/year equivalent) is completely unrealistic for zero-qualification work.", salary.RawText, annVal)
+		}
+		return
+	}
+
+	// 2. Task Scams / Merchant Data Updating / Micro-Work with Inflated Payouts (e.g. $200-$500/day or $2,000/week)
 	if isTaskScamClues || isGuaranteedDaily {
 		if salary.Currency == "USD" {
 			if salary.Period == "day" && (salary.Amount >= 100 || salary.MinAmount >= 100) {
@@ -437,7 +450,7 @@ func EvaluateSalaryAnomaly(salary *ParsedSalary, content string) {
 		}
 	}
 
-	// 2. Unskilled / Data Entry / "No Experience" roles with High Payouts
+	// 3. Unskilled / Data Entry / "No Experience" roles with High Payouts
 	if (isNoExperience && !isTechOrSenior && !isInternship) {
 		if salary.Currency == "USD" {
 			if annVal >= 75000 || (salary.Period == "month" && salary.Amount >= 4000) || (salary.Period == "hour" && salary.Amount >= 35) || (salary.Period == "day" && salary.Amount >= 150) {
@@ -461,8 +474,8 @@ func EvaluateSalaryAnomaly(salary *ParsedSalary, content string) {
 		}
 	}
 
-	// 3. Technical / Senior Roles (e.g. Senior Software Engineer $120,000/year or ₹8 LPA) -> LEGITIMATE, NOT ANOMALOUS
-	if isTechOrSenior {
+	// 4. Technical / Senior Roles (e.g. Senior Software Engineer $120,000/year or ₹8 LPA) -> LEGITIMATE, NOT ANOMALOUS
+	if isTechOrSenior && !isAbsurdOrIncoherent {
 		salary.IsAnomalous = false
 		salary.RiskContribution = 0
 		if salary.Currency == "USD" && annVal <= 300000 {
@@ -473,8 +486,8 @@ func EvaluateSalaryAnomaly(salary *ParsedSalary, content string) {
 		return
 	}
 
-	// 4. Internship Benchmarks (e.g. $25/hour or ₹15,000/month) -> LEGITIMATE, NOT ANOMALOUS
-	if isInternship {
+	// 5. Internship Benchmarks (e.g. $25/hour or ₹15,000/month) -> LEGITIMATE, NOT ANOMALOUS
+	if isInternship && !isAbsurdOrIncoherent {
 		if (salary.Currency == "USD" && salary.Amount <= 40 && salary.Period == "hour") || (salary.Currency == "INR" && salary.Amount <= 40000 && salary.Period == "month") {
 			salary.IsAnomalous = false
 			salary.RiskContribution = 0
