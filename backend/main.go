@@ -32,6 +32,7 @@ func main() {
 		proctor := v1.Group("/proctor")
 		{
 			proctor.POST("", handlers.HandleProctorVision)
+			proctor.POST("/log", handlers.LogMalpractice)
 		}
 	}
 	r.POST("/api/verify-upi", handlers.HandleUPIVerification)

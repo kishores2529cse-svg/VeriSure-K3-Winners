@@ -3,10 +3,11 @@ import { LayoutDashboard, ShieldAlert, Bug, Camera, BookOpen } from "lucide-reac
 import FloatingLines from "../visuals/FloatingLines";
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Landing", href: "/", icon: LayoutDashboard },
+  { name: "Console", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Proctor Vision", href: "/proctor", icon: Camera },
   { name: "UPI Guard", href: "/upi", icon: ShieldAlert },
   { name: "Scam Scanner", href: "/scam-scanner", icon: Bug },
-  { name: "Proctor Vision", href: "/proctor", icon: Camera },
   { name: "Scam Lists", href: "/scam-lists", icon: BookOpen },
 ];
 
