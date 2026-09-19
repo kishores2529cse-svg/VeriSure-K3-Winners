@@ -8,8 +8,8 @@ const tools = [
     href: "/scam-scanner",
     icon: Bug,
     label: "Investigate a scam",
-    accent: "border-rose-400/30 bg-rose-500/10 text-rose-300",
-    iconBackground: "bg-rose-500/15 text-rose-300",
+    accent: "border-[#7CFF4D]/25 bg-neutral-950/60 text-[#7CFF4D] hover:border-[#7CFF4D]/60 hover:shadow-[0_0_30px_rgba(124,255,77,0.12)]",
+    iconBackground: "bg-[#7CFF4D]/10 text-[#7CFF4D]",
   },
   {
     title: "Proctor Vision",
@@ -17,8 +17,8 @@ const tools = [
     href: "/proctor",
     icon: Camera,
     label: "Open proctoring",
-    accent: "border-cyan-400/30 bg-cyan-500/10 text-cyan-300",
-    iconBackground: "bg-cyan-500/15 text-cyan-300",
+    accent: "border-[#7CFF4D]/25 bg-neutral-950/60 text-[#7CFF4D] hover:border-[#7CFF4D]/60 hover:shadow-[0_0_30px_rgba(124,255,77,0.12)]",
+    iconBackground: "bg-[#7CFF4D]/10 text-[#7CFF4D]",
   },
   {
     title: "Scam Lists",
@@ -26,18 +26,18 @@ const tools = [
     href: "/scam-lists",
     icon: BookOpen,
     label: "Browse scam lists",
-    accent: "border-amber-400/30 bg-amber-500/10 text-amber-300",
-    iconBackground: "bg-amber-500/15 text-amber-300",
+    accent: "border-[#FFD84D]/30 bg-neutral-950/60 text-[#FFD84D] hover:border-[#FFD84D]/60 hover:shadow-[0_0_30px_rgba(255,216,77,0.12)]",
+    iconBackground: "bg-[#FFD84D]/10 text-[#FFD84D]",
   },
 ];
 
 export default function HomeDashboard() {
   return (
     <div className="space-y-8">
-      <section className="relative overflow-hidden rounded-2xl border border-white/25 bg-white/[0.11] p-8 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-10">
-        <div className="absolute inset-0 bg-slate-950/45" aria-hidden="true" />
+      <section className="relative overflow-hidden rounded-2xl border border-[#7CFF4D]/25 bg-neutral-950/75 p-8 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-10">
+        <div className="absolute inset-0 bg-[#7CFF4D]/[0.03]" aria-hidden="true" />
         <div className="relative z-10 max-w-2xl">
-          <div className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-cyan-200 drop-shadow-md">
+          <div className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#7CFF4D] drop-shadow-md">
             <ShieldCheck className="h-5 w-5" /> Security workspace
           </div>
           <h1 className="text-3xl font-semibold tracking-tight text-white drop-shadow-lg sm:text-4xl">Choose a protection tool</h1>
