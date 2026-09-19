@@ -1,4 +1,4 @@
-﻿package main
+package main
 
 import (
 	"log"
@@ -22,12 +22,6 @@ func main() {
 	// API v1 group
 	v1 := r.Group("/api/v1")
 	{
-		// UPI Fraud Detection
-		upi := v1.Group("/upi")
-		{
-			upi.POST("", handlers.HandleUPIFraudDetection)
-		}
-
 		// Scam Scanner
 		scams := v1.Group("/scams")
 		{
@@ -38,8 +32,10 @@ func main() {
 		proctor := v1.Group("/proctor")
 		{
 			proctor.POST("", handlers.HandleProctorVision)
+			proctor.POST("/log", handlers.LogMalpractice)
 		}
 	}
+	r.POST("/api/verify-upi", handlers.HandleUPIVerification)
 
 	log.Println("Server starting on port 8080...")
 	if err := r.Run(":8080"); err != nil {

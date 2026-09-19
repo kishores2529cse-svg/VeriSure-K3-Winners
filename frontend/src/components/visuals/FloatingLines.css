@@ -1,0 +1,11 @@
+.floating-lines-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.floating-lines-container canvas {
+  display: block;
+  opacity: 0.9;
+}
