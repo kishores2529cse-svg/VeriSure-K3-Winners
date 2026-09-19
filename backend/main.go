@@ -1,4 +1,4 @@
-package main
+﻿package main
 
 import (
 	"log"
@@ -12,14 +12,12 @@ import (
 func main() {
 	r := gin.Default()
 
-	// Standard CORS middleware allowing local frontend requests
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:3000"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-	}))
+	// Robust CORS middleware allowing any local development port (5173, 5174, 3000, etc.)
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	r.Use(cors.New(config))
 
 	// API v1 group
 	v1 := r.Group("/api/v1")
