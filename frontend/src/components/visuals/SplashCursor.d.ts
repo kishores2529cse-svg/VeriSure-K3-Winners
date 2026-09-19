@@ -1,4 +1,8 @@
-﻿import React from "react";
+import type { ComponentType } from "react";
 
-declare const SplashCursor: React.FC<any>;
+interface SplashCursorProps {
+  [key: string]: unknown;
+}
+
+declare const SplashCursor: ComponentType<SplashCursorProps>;
 export default SplashCursor;
