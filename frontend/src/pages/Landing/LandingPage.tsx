@@ -21,6 +21,7 @@ import {
   Zap
 } from 'lucide-react';
 import cyberMechImg from '../../assets/cyber_mech_hero.jpg';
+import SplashCursor from '../../components/visuals/SplashCursor';
 
 // -------------------------------------------------------------
 // Animated Number with IntersectionObserver & Cubic Easing
@@ -516,6 +517,18 @@ export default function LandingPage() {
     <div className="relative min-h-screen bg-[#090909] text-slate-100 overflow-x-hidden font-sans selection:bg-[#7CFF4D]/20 selection:text-[#7CFF4D]">
       {/* Background Particle Canvas */}
       <ParticleBackground />
+
+      {/* Professional Fluid Cursor Splash Effect */}
+      <SplashCursor
+        DENSITY_DISSIPATION={8}
+        VELOCITY_DISSIPATION={12}
+        PRESSURE={0.5}
+        SPLAT_RADIUS={0.1}
+        SPLAT_FORCE={4000}
+        COLOR_UPDATE_SPEED={10}
+        COLOR="#7CFF4D"
+        RAINBOW_MODE={false}
+      />
 
       {/* Atmospheric Background Glow Lights */}
       <div className="pointer-events-none absolute top-0 left-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-[#7CFF4D]/5 blur-[140px]" />
