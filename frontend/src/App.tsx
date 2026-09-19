@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import HomeDashboard from "./pages/HomeDashboard";
-import UpiGuard from "./pages/UpiGuard";
 import ScamScanner from "./pages/ScamScanner";
 import ProctorVision from "./pages/ProctorVision";
 import ScamLists from "./pages/ScamLists";
@@ -22,6 +21,7 @@ function App() {
         {/* Dashboard and Core Subsystems */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<HomeDashboard />} />
+
         </Route>
         <Route path="/upi" element={<DashboardLayout />}>
           <Route index element={<UpiGuard />} />
