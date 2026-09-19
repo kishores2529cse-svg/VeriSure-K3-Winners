@@ -22,6 +22,7 @@ function App() {
         {/* Dashboard and Core Subsystems */}
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<HomeDashboard />} />
+        </Route>
         <Route path="/upi" element={<DashboardLayout />}>
           <Route index element={<UpiGuard />} />
         </Route>
