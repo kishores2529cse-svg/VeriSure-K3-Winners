@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hugeicons/core-free-icons": "^4.3.4",
+    "@hugeicons/react": "^1.1.10",
     "@mediapipe/camera_utils": "^0.3.1675466862",
     "@mediapipe/face_mesh": "^0.4.1633559619",
     "@monaco-editor/react": "^4.7.0",

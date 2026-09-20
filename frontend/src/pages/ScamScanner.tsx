@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, useCallback } from "react";
 import Tesseract from "tesseract.js";
+import ThoughtLine from "../components/visuals/ThoughtLine";
 import {
   ShieldAlert,
   ShieldCheck,
@@ -128,6 +129,7 @@ export default function ScamScanner() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [analysisStage, setAnalysisStage] = useState<string>("");
+  const [analysisSteps, setAnalysisSteps] = useState<string[]>([]);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
@@ -158,9 +160,19 @@ export default function ScamScanner() {
 
     setLoading(true);
     setAnalysisStage("Analyzing signals with Multi-Signal Detection Engine...");
+    setAnalysisSteps(["Extracting text payload", "Initiating Multi-Signal Engine"]);
+    // Simulate steps if API is too fast
+    setTimeout(() => setAnalysisSteps(prev => [...prev, "Cross-referencing scam patterns"]), 800);
     setError(null);
 
     try {
+      // Artificial delay for the ThoughtLine animation (Step 1)
+      await new Promise(r => setTimeout(r, 600));
+      setAnalysisSteps(prev => [...prev, "Cross-referencing scam patterns"]);
+      
+      // Artificial delay (Step 2)
+      await new Promise(r => setTimeout(r, 800));
+
       const response = await fetch("http://localhost:8080/api/v1/scams", {
         method: "POST",
         headers: {
@@ -174,6 +186,11 @@ export default function ScamScanner() {
       }
 
       setAnalysisStage("Aggregating threat scores and evidence...");
+      setAnalysisSteps(prev => [...prev, "Aggregating threat signatures", "Finalizing risk assessment"]);
+      
+      // Final delay to let the animation finish before showing results
+      await new Promise(r => setTimeout(r, 800));
+      
       const rawData = await response.json();
 
       const normalizedResult: AnalysisResult = {
@@ -648,27 +665,24 @@ Timestamp: ${new Date(result.analyzed_at).toLocaleString()}`;
           </div>
 
           <div className="bg-[#0B0F0B] border border-neutral-800/80 rounded-xl overflow-hidden p-4">
-            <h3 className="text-xs font-bold tracking-wider text-neutral-400 uppercase mb-3">Analysis Status</h3>
-            <div className="space-y-2 text-xs font-mono text-neutral-500 mb-4">
-              <div className="flex items-center space-x-2">
-                {(inputMode === "text" ? inputText.trim() : ocrExtractedText.trim()) ? <Check className="w-3.5 h-3.5 text-[#7CFF4D]" /> : <div className="w-3.5 h-3.5 border border-neutral-700 rounded-sm" />}
-                <span className={(inputMode === "text" ? inputText.trim() : ocrExtractedText.trim()) ? "text-neutral-300" : ""}>Text extracted</span>
+            <h3 className="text-xs font-bold tracking-wider text-neutral-400 uppercase mb-3">Analysis Engine</h3>
+              <div className="mb-6 mt-4">
+                <ThoughtLine
+                  working={loading}
+                  steps={analysisSteps}
+                  label="Analyzing with VeriSure AI..."
+                  doneLabel="Analysis Complete"
+                  color="#7CFF4D"
+                  fontSize={12}
+                  breathPeriod={1.6}
+                  breathDepth={0.45}
+                  settleDuration={350}
+                  collapsible={false}
+                  showTimer={true}
+                />
               </div>
-              <div className="flex items-center space-x-2">
-                {result ? <Check className="w-3.5 h-3.5 text-[#7CFF4D]" /> : loading ? <Cpu className="w-3.5 h-3.5 animate-spin text-neutral-400" /> : <div className="w-3.5 h-3.5 border border-neutral-700 rounded-sm" />}
-                <span className={result ? "text-neutral-300" : ""}>Features analyzed</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                {result ? <Check className="w-3.5 h-3.5 text-[#7CFF4D]" /> : <div className="w-3.5 h-3.5 border border-neutral-700 rounded-sm" />}
-                <span className={result ? "text-neutral-300" : ""}>Scam patterns analyzed</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                {result ? <Check className="w-3.5 h-3.5 text-[#7CFF4D]" /> : <div className="w-3.5 h-3.5 border border-neutral-700 rounded-sm" />}
-                <span className={result ? "text-neutral-300" : ""}>Risk assessment generated</span>
-              </div>
-            </div>
 
-            <button
+              <button
               onClick={() => {
                 if (inputMode === "text") {
                   executeScamAnalysis(inputText, "DIRECT_TEXT");

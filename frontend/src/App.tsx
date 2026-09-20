@@ -31,7 +31,9 @@ function App() {
         <Route path="/scam-lists" element={<DashboardLayout />}>
           <Route index element={<ScamLists />} />
         </Route>
-        <Route path="/proctor" element={<ProctorVision />} />
+        <Route path="/proctor" element={<DashboardLayout />}>
+          <Route index element={<ProctorVision />} />
+        </Route>
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
