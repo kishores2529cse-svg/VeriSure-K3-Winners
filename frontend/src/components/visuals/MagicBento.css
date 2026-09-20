@@ -1,0 +1,7 @@
+.magic-bento-grid { display: grid; gap: 1.25rem; position: relative; }
+.magic-bento-card { position: relative; overflow: hidden; transform-style: preserve-3d; --glow-x: 50%; --glow-y: 50%; --spotlight-opacity: 0; border-color: color-mix(in srgb, var(--grid-glow) 35%, transparent); transition: box-shadow 220ms ease, border-color 220ms ease; }
+.magic-bento-card::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; background: radial-gradient(280px circle at var(--glow-x) var(--glow-y), color-mix(in srgb, var(--glow-color) 24%, transparent), transparent 65%); opacity: var(--spotlight-opacity); transition: opacity 180ms ease; }
+.magic-bento-card:hover { border-color: var(--glow-color); box-shadow: 0 12px 35px color-mix(in srgb, var(--glow-color) 18%, transparent); }
+.magic-bento-particle { position: absolute; z-index: 2; width: 4px; height: 4px; border-radius: 999px; pointer-events: none; background: var(--particle-color); box-shadow: 0 0 10px var(--particle-color); }
+.magic-bento-ripple { position: absolute; z-index: 3; pointer-events: none; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--particle-color) 40%, transparent), transparent 68%); }
+@media (prefers-reduced-motion: reduce) { .magic-bento-card { transform: none !important; transition: none; } .magic-bento-particle, .magic-bento-ripple { display: none; } }
