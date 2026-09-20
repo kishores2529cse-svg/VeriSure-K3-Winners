@@ -1,6 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, ShieldAlert, Bug, Camera, BookOpen } from "lucide-react";
-import LightRays from "../visuals/LightRays";
+import SideRays from "../visuals/SideRays";
 import Dock from "../navigation/Dock";
 
 const navigation = [
@@ -26,16 +26,18 @@ export default function DashboardLayout() {
 
   return (
     <div className="relative isolate flex h-screen overflow-hidden bg-[#090909]">
-      <LightRays
-        raysOrigin="top-center"
-        raysColor="#7CFF4D"
-        raysSpeed={1.5}
-        lightSpread={0.8}
-        rayLength={1.2}
-        followMouse
-        mouseInfluence={0.1}
-        noiseAmount={0.1}
-        distortion={0.05}
+      <SideRays
+        speed={1.5}
+        rayColor1="#7CFF4D"
+        rayColor2="#101510"
+        intensity={1.2}
+        spread={2}
+        origin="top-right"
+        tilt={-10}
+        saturation={1}
+        blend={0.5}
+        falloff={1.8}
+        opacity={0.4}
       />
       
       {/* Main Content */}
