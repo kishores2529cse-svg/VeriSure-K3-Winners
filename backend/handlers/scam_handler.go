@@ -1,4 +1,4 @@
-﻿package handlers
+package handlers
 
 import (
 	"net/http"
@@ -21,6 +21,7 @@ const (
 	CatPaymentMethod     SignalCategory = "Untraceable / Direct UPI / Crypto / Escrow Bypass"
 	CatCredentialTheft   SignalCategory = "Sensitive Credential Harvesting"
 	CatLegitimacySignal  SignalCategory = "Legitimacy & Professional Verification"
+	CatIncoherentText    SignalCategory = "Incoherent / Generated Spam"
 )
 
 // SemanticPattern represents a generalized pattern rule with regex and category
@@ -106,10 +107,10 @@ var semanticPatterns = []SemanticPattern{
 	// 2. UNREALISTIC SALARY / TASK INCOME BAIT
 	// ==========================================
 	{
-		Regex: regexp.MustCompile(`(?i)\b(?:earn\s+without\s+investment|guaranteed\s+(?:monthly|daily)\s+income|100%\s+daily\s+profit|get\s+rich\s+quick|earn\s+daily\s+from\s+your\s+phone)\b`),
+		Regex: regexp.MustCompile(`(?i)\b(?:earn\s+without\s+investment|guaranteed\s+(?:monthly|daily)\s+income|100%\s+daily\s+profit|get\s+rich\s+quick|earn\s+daily\s+from\s+your\s+phone|i\s+will\s+give\s+you\s+[$₹€£]\s*[0-9]+(?:\s*per\s+day)?)\b`),
 		Category:  CatSalaryAnomaly,
-		Weight:    35,
-		Rationale: "Promotes guaranteed income without investment or risk, typical of task scams.",
+		Weight:    45,
+		Rationale: "Promotes guaranteed or arbitrary daily personal payouts typical of task/social engineering scams.",
 	},
 	{
 		Regex: regexp.MustCompile(`(?i)\b(?:work\s+(?:20\s+to\s+60\s+minutes|1[- ]2\s+hours|\d+\s+minutes)\s+daily|anytime,\s*anywhere|help\s+merchants\s+update\s+their\s+data|order\s+grabbing|merchant\s+data\s+update)\b`),
@@ -119,13 +120,19 @@ var semanticPatterns = []SemanticPattern{
 	},
 
 	// ==========================================
-	// 3. RECRUITMENT SHORTCUTS & UNREALISTIC SCOPE
+	// 3. RECRUITMENT SHORTCUTS & ABSURD / INCOHERENT SCOPE
 	// ==========================================
 	{
-		Regex: regexp.MustCompile(`(?i)\b(?:no\s+experience\s+required\s+(?:for|as)\s+(?:manager|lead|director|executive|head|supervisor)|no\s+skills?\s+needed\s+(?:for|to\s+earn)|shortlisted\s+(?:for|as)\s+(?:executive\s+manager|manager|lead)|invite\s+you\s+for\s+an\s+interview\s+for\s+the\s+(?:information\s+systems\s+manager|manager|lead)\s+position)\b`),
+		Regex: regexp.MustCompile(`(?i)\b(?:stand\s+near\s+me(?:\s+for\s+\d+\s+years)?|stay\s+with\s+me|sit\s+(?:near|next\s+to|beside)\s+me|survive\s+in\s+the\s+footer|best\s+of\s+vector|god\s+bless\s+you\s+all\s+the\s+time)\b`),
 		Category:  CatRecruitmentScope,
-		Weight:    30,
-		Rationale: "Offers leadership/managerial roles with zero qualifications or prior screening.",
+		Weight:    45,
+		Rationale: "Uses bizarre, nonsensical, or bot-generated requirements in a recruitment solicitation.",
+	},
+	{
+		Regex: regexp.MustCompile(`(?i)\b(?:no\s+experience\s+(?:needed|required)\s+(?:for\s+fresher|for\s+freshers)|no\s+experience\s+required\s+(?:for|as)\s+(?:manager|lead|director|executive|head|supervisor)|no\s+skills?\s+needed\s+(?:for|to\s+earn)|shortlisted\s+(?:for|as)\s+(?:executive\s+manager|manager|lead)|invite\s+you\s+for\s+an\s+interview\s+for\s+the\s+(?:information\s+systems\s+manager|manager|lead)\s+position)\b`),
+		Category:  CatRecruitmentScope,
+		Weight:    35,
+		Rationale: "Offers high compensation or managerial positions with zero experience for freshers.",
 	},
 	{
 		Regex: regexp.MustCompile(`(?i)\b(?:no\s+interview\s+required|direct\s+selection|100%\s+guaranteed\s+job|100%\s+selection\s+guaranteed|instant\s+offer\s+letter|direct\s+appointment\s+letter|direct\s+appointment|direct\s+recruitment|no\s+resume\s+needed|profile\s+has\s+been\s+shortlisted)\b`),
@@ -194,9 +201,9 @@ var semanticPatterns = []SemanticPattern{
 	// 6. URGENCY & SOCIAL PRESSURE (Weak/Contextual Signal)
 	// ==========================================
 	{
-		Regex: regexp.MustCompile(`(?i)\b(?:urgent\s+requirement|hiring\s+urgently|apply\s+immediately|limited\s+(?:slots|vacancies|seats)|act\s+now|only\s+\d+\s+seats\s+left|offer\s+expires\s+in\s+\d+\s+hours?|urgent\s+relocation)\b`),
+		Regex: regexp.MustCompile(`(?i)\b(?:urgent\s+requirement|hiring\s+urgently|apply\s+immediately|limited\s+(?:slots|vacancies|seats)|act\s+now|only\s+\d+\s+seats\s+left|offer\s+expires\s+in\s+\d+\s+hours?|urgent\s+relocation|look\s+forward\s+to\s+hearing\s+back\s+from\s+you\s+soon\s+as\s+possible|soon\s+as\s+possible\s+to\s+do\s+the\s+best)\b`),
 		Category:  CatSocialPressure,
-		Weight:    10,
+		Weight:    15,
 		Rationale: "Uses artificial scarcity or pressure tactics to encourage hasty compliance.",
 	},
 
@@ -319,6 +326,42 @@ func HandleScamScanner(c *gin.Context) {
 		}
 	}
 
+	// 2.5 Manual check for incoherent repeated words
+	words := strings.Fields(content)
+	if len(words) > 5 {
+		consecutiveCount := 1
+		for i := 1; i < len(words); i++ {
+			prev := strings.ToLower(strings.Trim(words[i-1], ".,!?\"'()[]{}"))
+			curr := strings.ToLower(strings.Trim(words[i], ".,!?\"'()[]{}"))
+			
+			if prev == curr && len(curr) >= 2 {
+				consecutiveCount++
+			} else {
+				consecutiveCount = 1
+			}
+
+			if consecutiveCount >= 3 {
+				// We found a word repeated 3 or more times consecutively
+				categoryScores[CatIncoherentText] += 50
+				categoryDescriptions[CatIncoherentText] = append(categoryDescriptions[CatIncoherentText], "Contains excessive consecutive word repetition, indicating keyboard mashing or incoherent spam.")
+				
+				matchedStr := curr + " " + curr + " " + curr
+				findings = append(findings, ScamFinding{
+					MatchedTerm: matchedStr,
+					Weight:      50,
+					Rationale:   "Consecutive repeated words indicate automated spam or incoherent content.",
+					Category:    string(CatIncoherentText),
+				})
+				
+				if !flaggedTermsMap[curr] {
+					flaggedTermsMap[curr] = true
+					flaggedTerms = append(flaggedTerms, curr)
+				}
+				break // Only need to detect it once
+			}
+		}
+	}
+
 	// 2. Structured, Currency-Aware Salary Parsing & Anomaly Analysis
 	parsedSalary := ParseSalary(content)
 	if parsedSalary != nil {
@@ -362,7 +405,10 @@ func HandleScamScanner(c *gin.Context) {
 			continue
 		}
 		cappedCatScore := score
-		if cappedCatScore > 65 {
+		// Incoherent text can score higher up to 100
+		if cat == CatIncoherentText && cappedCatScore > 85 {
+			cappedCatScore = 85
+		} else if cat != CatIncoherentText && cappedCatScore > 65 {
 			cappedCatScore = 65
 		}
 		baseRiskScore += cappedCatScore
@@ -380,22 +426,28 @@ func HandleScamScanner(c *gin.Context) {
 		synergyBonus += 25 // High task payout + WhatsApp/Telegram redirection
 	}
 	if hasSalaryAnomaly && hasRecruitmentShortcut {
-		synergyBonus += 20 // High pay + No experience/manager invite is high-confidence lure
+		synergyBonus += 30 // High/absurd pay + No experience/absurd requirement is high-confidence lure
+	}
+	if hasSalaryAnomaly && hasSocialPressure {
+		synergyBonus += 20 // High pay bait + Urgency/emotional manipulation
 	}
 	if hasAdvancePayment && hasSalaryAnomaly {
 		synergyBonus += 15 // High pay bait paired with upfront charge
 	}
-	if hasSocialPressure && (hasAdvancePayment || hasSalaryAnomaly || hasPaymentMethod) {
+	if hasSocialPressure && (hasAdvancePayment || hasPaymentMethod) {
 		synergyBonus += 10 // Urgency pressure combined with financial demands
 	}
 	if hasCredentialTheft {
 		synergyBonus += 30 // Direct credential harvesting
 	}
+	if categoryScores[CatIncoherentText] > 0 {
+		synergyBonus += 50 // Severe penalty for completely incoherent/gibberish text
+	}
 
 	rawScore := baseRiskScore + synergyBonus + legitimacyDampening
 
 	// Single isolated weak signals without other fraud indicators should stay low risk
-	if !hasAdvancePayment && !hasPaymentMethod && !hasCredentialTheft && !hasSalaryAnomaly && !hasRecruitmentShortcut && !hasSuspiciousChannel {
+	if !hasAdvancePayment && !hasPaymentMethod && !hasCredentialTheft && !hasSalaryAnomaly && !hasRecruitmentShortcut && !hasSuspiciousChannel && categoryScores[CatIncoherentText] == 0 {
 		if rawScore > 20 && len(findings) <= 1 {
 			rawScore = 15 // Capped to LOW risk if only minor urgency was found
 		}

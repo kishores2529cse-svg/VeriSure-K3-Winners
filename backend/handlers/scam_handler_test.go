@@ -196,7 +196,14 @@ Paid annual leave: In addition to statutory holidays such as maternity and pater
 			maxScore:   100,
 		},
 		{
-			name: "17. Legitimate US Senior Software Engineer $120,000/year",
+			name: "17. User Screenshot 2: Absurd & Incoherent Scam Lure ($2000 per day + stand near me)",
+			content: `Hey , I will give you $2000 per day and stand near me for 10 years , no experience needed for fresher. I thought you would like to know my God bless you all the time of reading but I can survive in the footer must look forward to hearing back from you soon as possible to do the best of vector`,
+			expectScam: true,
+			minScore:   95,
+			maxScore:   100,
+		},
+		{
+			name: "18. Legitimate US Senior Software Engineer $120,000/year",
 			content: `Senior Software Engineer at Stripe.
 Salary: $120,000/year with comprehensive healthcare and 401(k).
 Requirements: 5+ years of experience with distributed systems and Go.
@@ -207,7 +214,7 @@ Apply on our careers page at greenhouse.io. We never charge application fees.`,
 			maxScore:   15,
 		},
 		{
-			name: "18. US Remote Internship $25/hour",
+			name: "19. US Remote Internship $25/hour",
 			content: `Remote Software Engineering Internship (Summer).
 Compensation: $25/hour.
 Mentorship and technical workshops provided.
@@ -217,7 +224,7 @@ Interview includes coding assessment and panel interview.`,
 			maxScore:   20,
 		},
 		{
-			name: "19. US Software Engineer USD 80K - 120K annually",
+			name: "20. US Software Engineer USD 80K - 120K annually",
 			content: `Backend Engineer. Salary: USD 80K - 120K annually.
 Requirements: 3+ years experience with PostgreSQL and REST APIs.
 Apply at workday portal.`,
@@ -226,7 +233,7 @@ Apply at workday portal.`,
 			maxScore:   20,
 		},
 		{
-			name: "20. Fake US Data Entry $100,000/year with Advance Fee",
+			name: "21. Fake US Data Entry $100,000/year with Advance Fee",
 			content: `Urgent Hiring! Work from Home Data Entry Operator.
 Earn $100,000/year with no experience required.
 Guaranteed direct placement without interview.
@@ -237,7 +244,7 @@ Contact HR on Telegram: @us_recruitment_hub`,
 			maxScore:   100,
 		},
 		{
-			name: "21. Fake WFH $5,000/month with Telegram & Registration Fee",
+			name: "22. Fake WFH $5,000/month with Telegram & Registration Fee",
 			content: `Earn $5,000/month typing documents at home.
 No experience required! Guaranteed daily income.
 Pay $300 registration fee before start.
@@ -247,7 +254,7 @@ Reach out to recruiter on Telegram @easy_us_jobs immediately.`,
 			maxScore:   100,
 		},
 		{
-			name: "22. Incidental Price in Legitimate Posting ($500 equipment)",
+			name: "23. Incidental Price in Legitimate Posting ($500 equipment)",
 			content: `Full Stack Engineer. We offer competitive salary of $110,000/year plus $500 home office equipment stipend.
 Degree in Computer Science and 3+ years experience required. Apply on our website.`,
 			expectScam: false,
