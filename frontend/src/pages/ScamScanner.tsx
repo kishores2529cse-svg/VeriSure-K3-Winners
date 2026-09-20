@@ -1,31 +1,21 @@
-import React, { useState, useMemo, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Tesseract from "tesseract.js";
 import {
   ShieldAlert,
   ShieldCheck,
   AlertTriangle,
-  Sparkles,
-  RotateCcw,
   Copy,
   Check,
   FileSearch,
-  Zap,
-  Info,
-  ChevronRight,
-  Terminal,
   Layers,
-  ClipboardPaste,
   Upload,
   Image as ImageIcon,
   FileText,
   X,
-  Eye,
   Cpu,
   ArrowRight,
-  TrendingUp,
-  Award,
-  DollarSign,
 } from "lucide-react";
+import { saveScamReport } from "../utils/scamReports";
 
 interface ScamFinding {
   matched_term: string;
@@ -120,29 +110,17 @@ export default function ScamScanner() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const [ocrLoading, setOcrLoading] = useState<boolean>(false);
-  const [ocrProgress, setOcrProgress] = useState<number>(0);
-  const [ocrStage, setOcrStage] = useState<string>("");
   const [ocrConfidence, setOcrConfidence] = useState<number | null>(null);
   const [ocrExtractedText, setOcrExtractedText] = useState<string>("");
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [analysisStage, setAnalysisStage] = useState<string>("");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"highlighted" | "breakdown" | "findings" | "image_preview">("highlighted");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const wordCount = useMemo(() => {
-    const textToCount = inputMode === "text" ? inputText : ocrExtractedText;
-    return textToCount.trim() ? textToCount.trim().split(/\s+/).length : 0;
-  }, [inputMode, inputText, ocrExtractedText]);
-
-  const charCount = useMemo(() => {
-    return inputMode === "text" ? inputText.length : ocrExtractedText.length;
-  }, [inputMode, inputText, ocrExtractedText]);
 
   const executeScamAnalysis = async (
     textToAnalyze: string,
@@ -157,7 +135,6 @@ export default function ScamScanner() {
     }
 
     setLoading(true);
-    setAnalysisStage("Analyzing signals with Multi-Signal Detection Engine...");
     setError(null);
 
     try {
@@ -173,7 +150,6 @@ export default function ScamScanner() {
         throw new Error(`Server returned status ${response.status}: ${response.statusText}`);
       }
 
-      setAnalysisStage("Aggregating threat scores and evidence...");
       const rawData = await response.json();
 
       const normalizedResult: AnalysisResult = {
@@ -193,6 +169,21 @@ export default function ScamScanner() {
       };
 
       setResult(normalizedResult);
+      saveScamReport({
+        id: `${normalizedResult.analyzed_at}-${normalizedResult.score}-${normalizedResult.word_count}`,
+        analyzedAt: normalizedResult.analyzed_at,
+        score: normalizedResult.score,
+        riskLevel: normalizedResult.risk_level,
+        flaggedTerms: normalizedResult.flagged_terms,
+        findings: normalizedResult.findings.map((finding) => ({
+          matchedTerm: finding.matched_term,
+          category: finding.category,
+          rationale: finding.rationale,
+          weight: finding.weight,
+        })),
+        wordCount: normalizedResult.word_count,
+        source: normalizedResult.source,
+      });
       setActiveTab("highlighted");
     } catch (err: any) {
       console.error("Scam analysis error:", err);
@@ -201,29 +192,17 @@ export default function ScamScanner() {
       );
     } finally {
       setLoading(false);
-      setAnalysisStage("");
     }
   };
 
   const processImageOCR = useCallback(async (imageFile: File | string, previewUrl: string) => {
     setOcrLoading(true);
-    setOcrProgress(0);
-    setOcrStage("Initializing OCR Engine...");
     setError(null);
     setResult(null);
 
     try {
       const ocrResult = await Tesseract.recognize(imageFile, "eng", {
-        logger: (m) => {
-          if (m.status === "recognizing text" && m.progress != null) {
-            const pct = Math.round(m.progress * 100);
-            setOcrProgress(pct);
-            setOcrStage(`Extracting text from image (${pct}%)...`);
-          } else if (m.status) {
-            const formatted = m.status.replace(/_/g, " ");
-            setOcrStage(`${formatted.charAt(0).toUpperCase() + formatted.slice(1)}...`);
-          }
-        },
+        logger: () => {},
       });
 
       const extracted = (ocrResult.data.text || "").trim();
@@ -237,7 +216,6 @@ export default function ScamScanner() {
 
       setOcrExtractedText(extracted);
       setOcrConfidence(confidence);
-      setOcrStage("Text extracted successfully");
 
       await executeScamAnalysis(extracted, "IMAGE_OCR", confidence, previewUrl);
     } catch (err: any) {
@@ -349,23 +327,6 @@ export default function ScamScanner() {
     }, "image/png");
   };
 
-  const handlePasteClipboard = async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      if (text) {
-        if (inputMode === "text") {
-          setInputText(text);
-        } else {
-          setOcrExtractedText(text);
-        }
-        setResult(null);
-        setError(null);
-      }
-    } catch {
-      // Clipboard fallback
-    }
-  };
-
   const handleCopyReport = () => {
     if (!result) return;
     const findings = result.findings || [];
@@ -401,63 +362,6 @@ Timestamp: ${new Date(result.analyzed_at).toLocaleString()}`;
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  const renderHighlightedDocument = () => {
-    const currentText = inputMode === "text" ? inputText : ocrExtractedText;
-    const flagged = result?.flagged_terms || [];
-
-    if (!result || flagged.length === 0) {
-      return (
-        <div className="font-mono text-sm leading-relaxed text-neutral-300 whitespace-pre-wrap">
-          {currentText}
-        </div>
-      );
-    }
-
-    const escapedTerms = flagged
-      .filter((term) => term && term.trim().length > 0)
-      .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-      .sort((a, b) => b.length - a.length);
-
-    if (escapedTerms.length === 0) {
-      return (
-        <div className="font-mono text-sm leading-relaxed text-neutral-300 whitespace-pre-wrap">
-          {currentText}
-        </div>
-      );
-    }
-
-    const regex = new RegExp(`(${escapedTerms.join("|")})`, "gi");
-    const parts = currentText.split(regex);
-
-    return (
-      <div className="font-mono text-sm leading-relaxed text-neutral-300 whitespace-pre-wrap select-text">
-        {parts.map((part, index) => {
-          const isFlagged = flagged.some(
-            (term) => term.toLowerCase() === part.toLowerCase()
-          );
-
-          if (isFlagged) {
-            return (
-              <mark
-                key={index}
-                className="inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded font-bold text-red-100 bg-red-500/40 border border-red-500/80 shadow-[0_0_12px_rgba(239,68,68,0.4)] transition-all hover:bg-red-500/60"
-                title={`Flagged Trigger Phrase: "${part}"`}
-              >
-                <span>{part}</span>
-                <span className="ml-1 text-[9px] bg-red-600 text-white rounded px-1 uppercase tracking-wider font-sans font-semibold">
-                  FLAGGED
-                </span>
-              </mark>
-            );
-          }
-
-          return <span key={index}>{part}</span>;
-        })}
-      </div>
-    );
-  };
-
 
   const getScoreTheme = (score: number) => {
     if (score >= 75) {

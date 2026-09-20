@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
-import { Children, cloneElement, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
+import { Children, cloneElement, useEffect, useMemo, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 
 import './Dock.css';
 
